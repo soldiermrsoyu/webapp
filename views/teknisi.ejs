@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teknisi Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="dashboard">
+    <h1>Teknisi Dashboard</h1>
+    <p>Halo <%= user.user %></p>
+    <div class="card">
+      <a href="/checklist">Checklist FCU</a>
+    </div>
+    <div class="card">
+      <a href="/submit-report">Submit Laporan</a>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="/teknisi" class="nav-item active" id="home-nav">
+      <div class="nav-icon">🏠</div>
+      <div class="nav-label">Home</div>
+    </a>
+    <a href="/teknisi/task" class="nav-item" id="task-nav">
+      <div class="nav-icon">✓</div>
+      <div class="nav-label">Task</div>
+    </a>
+    <a href="/teknisi/profile" class="nav-item" id="profile-nav">
+      <div class="nav-icon">👤</div>
+      <div class="nav-label">Profile</div>
+    </a>
+  </nav>
+
+  <script>
+    // Set active nav item based on current page
+    const currentPage = window.location.pathname;
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.classList.remove('active');
+    });
+    
+    if (currentPage === '/teknisi') {
+      document.getElementById('home-nav')?.classList.add('active');
+    }
+  </script>
+</body>
+</html>

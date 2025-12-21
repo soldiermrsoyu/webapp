@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Menu - SPV</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="dashboard">
+    <h1>Task Menu</h1>
+    <p>Kelola perawatan peralatan</p>
+    
+    <div class="equipment-grid">
+      <div class="equipment-card" onclick="showModal('fcu')">
+        <div class="equipment-icon">❄️</div>
+        <div class="equipment-name">FCU</div>
+      </div>
+      <div class="equipment-card" onclick="showModal('pump')">
+        <div class="equipment-icon">💧</div>
+        <div class="equipment-name">PUMP</div>
+      </div>
+      <div class="equipment-card" onclick="showModal('genset')">
+        <div class="equipment-icon">⚡</div>
+        <div class="equipment-name">GENSET</div>
+      </div>
+      <div class="equipment-card" onclick="showModal('electric')">
+        <div class="equipment-icon">🔌</div>
+        <div class="equipment-name">ELECTRIC</div>
+      </div>
+      <div class="equipment-card" onclick="showModal('mcfa')">
+        <div class="equipment-icon">⚙️</div>
+        <div class="equipment-name">MCFA</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FCU Modal - List View -->
+  <div id="fcuModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>FCU - Daftar Unit</h2>
+        <span class="close" onclick="closeModal('fcu')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div id="fcuList" class="fcu-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FCU Detail Modal -->
+  <div id="fcuDetailModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Detail FCU</h2>
+        <span class="close" onclick="closeModal('fcuDetail')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div id="fcuDetailContent">
+          <table class="detail-table">
+            <tr>
+              <td><strong>ID</strong></td>
+              <td id="detail-id"></td>
+            </tr>
+            <tr>
+              <td><strong>Lantai</strong></td>
+              <td id="detail-lantai"></td>
+            </tr>
+            <tr>
+              <td><strong>Unit</strong></td>
+              <td id="detail-unit"></td>
+            </tr>
+            <tr>
+              <td><strong>Alias</strong></td>
+              <td id="detail-alias"></td>
+            </tr>
+            <tr>
+              <td><strong>Tanggal</strong></td>
+              <td id="detail-tanggal"></td>
+            </tr>
+          </table>
+        </div>
+        <div class="modal-actions" style="margin-top: 20px;">
+          <button onclick="showTeknijiModal()" class="btn-primary">Pilih Teknisi</button>
+          <button onclick="closeModal('fcuDetail')" class="btn-secondary">Kembali</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Teknisi Selection Modal -->
+  <div id="teknijiModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Pilih Teknisi</h2>
+        <span class="close" onclick="closeModal('tekniji')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div id="teknijiList" class="tekniji-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Other Equipment Modals -->
+  <div id="pumpModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>PUMP - Jadwal Maintenance</h2>
+        <span class="close" onclick="closeModal('pump')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <p>Jadwal maintenance untuk PUMP akan segera hadir</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="gensetModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>GENSET - Jadwal Maintenance</h2>
+        <span class="close" onclick="closeModal('genset')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <p>Jadwal maintenance untuk GENSET akan segera hadir</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="electricModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>ELECTRIC - Jadwal Maintenance</h2>
+        <span class="close" onclick="closeModal('electric')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <p>Jadwal maintenance untuk ELECTRIC akan segera hadir</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="mcfaModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>MCFA - Jadwal Maintenance</h2>
+        <span class="close" onclick="closeModal('mcfa')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <p>Jadwal maintenance untuk MCFA akan segera hadir</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="/spv" class="nav-item" id="home-nav">
+      <div class="nav-icon">🏠</div>
+      <div class="nav-label">Home</div>
+    </a>
+    <a href="/spv/task" class="nav-item active" id="task-nav">
+      <div class="nav-icon">✓</div>
+      <div class="nav-label">Task</div>
+    </a>
+    <a href="/spv/profile" class="nav-item" id="profile-nav">
+      <div class="nav-icon">👤</div>
+      <div class="nav-label">Profile</div>
+    </a>
+  </nav>
+
+  <script>
+    let selectedFCU = null;
+
+    function showModal(type) {
+      const modalId = type + 'Modal';
+      document.getElementById(modalId).style.display = 'block';
+      
+      if (type === 'fcu') {
+        loadFCUList();
+      }
+    }
+
+    function closeModal(type) {
+      const modalId = type + 'Modal';
+      document.getElementById(modalId).style.display = 'none';
+    }
+
+    function loadFCUList() {
+      fetch('/api/jadwal')
+        .then(response => response.json())
+        .then(data => {
+          const fcuList = document.getElementById('fcuList');
+          if (data.length === 0) {
+            fcuList.innerHTML = '<p>Tidak ada jadwal FCU untuk hari ini</p>';
+            return;
+          }
+          
+          let html = '<div class="fcu-items">';
+          data.forEach((item, index) => {
+            html += `<div class="fcu-item" data-index="${index}" data-id="${item.id}" data-lantai="${item.lantai}" data-unit="${item.unit}" data-alias="${item.alias}" data-tanggal="${item.tanggal}">
+              <div class="fcu-id">${item.id}</div>
+              <div class="fcu-buttons">
+                <button class="btn-small fcu-detail-btn">Detail</button>
+              </div>
+            </div>`;
+          });
+          html += '</div>';
+          fcuList.innerHTML = html;
+          
+          // Add event listeners to all detail buttons
+          document.querySelectorAll('.fcu-detail-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+              const item = this.closest('.fcu-item');
+              showFCUDetail(
+                item.dataset.id,
+                item.dataset.lantai,
+                item.dataset.unit,
+                item.dataset.alias,
+                item.dataset.tanggal
+              );
+            });
+          });
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          document.getElementById('fcuList').innerHTML = '<p>Error loading data</p>';
+        });
+    }
+
+    function showFCUDetail(id, lantai, unit, alias, tanggal) {
+      console.log('Setting selectedFCU:', { id, lantai, unit, alias, tanggal });
+      selectedFCU = { id, lantai, unit, alias, tanggal };
+      document.getElementById('detail-id').textContent = id;
+      document.getElementById('detail-lantai').textContent = lantai;
+      document.getElementById('detail-unit').textContent = unit;
+      document.getElementById('detail-alias').textContent = alias;
+      document.getElementById('detail-tanggal').textContent = tanggal;
+      
+      closeModal('fcu');
+      showModal('fcuDetail');
+    }
+
+    function showTeknijiModal() {
+      loadTeknijiList();
+      closeModal('fcuDetail');
+      showModal('tekniji');
+    }
+
+    function loadTeknijiList() {
+      fetch('/api/teknisi')
+        .then(response => response.json())
+        .then(data => {
+          const teknijiList = document.getElementById('teknijiList');
+          if (data.length === 0) {
+            teknijiList.innerHTML = '<p>Tidak ada teknisi yang tersedia</p>';
+            return;
+          }
+          
+          let html = '<div class="tekniji-items">';
+          data.forEach(item => {
+            html += `<div class="tekniji-item" data-id="${item.id}" data-user="${item.user}">
+              <div class="tekniji-name">${item.user}</div>
+              <button class="btn-primary tekniji-select-btn">Pilih</button>
+            </div>`;
+          });
+          html += '</div>';
+          teknijiList.innerHTML = html;
+          
+          // Add event listeners to all select buttons
+          document.querySelectorAll('.tekniji-select-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+              const item = this.closest('.tekniji-item');
+              assignToTekniji(parseInt(item.dataset.id), item.dataset.user);
+            });
+          });
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          document.getElementById('teknijiList').innerHTML = '<p>Error loading data</p>';
+        });
+    }
+
+    function assignToTekniji(teknijiId, teknijiName) {
+      console.log('Assigning task with:', { selectedFCU, teknijiId });
+      
+      if (!selectedFCU) {
+        alert('Pilih FCU terlebih dahulu');
+        return;
+      }
+
+      if (!selectedFCU.id || !teknijiId) {
+        alert('Data tidak lengkap. FCU ID: ' + selectedFCU.id + ', Teknisi ID: ' + teknijiId);
+        return;
+      }
+
+      fetch('/api/assign-task', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          fcu_id: selectedFCU.id,
+          teknisi_id: parseInt(teknijiId)
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Assignment response:', data);
+        if (data.success) {
+          alert(`Task berhasil dikirim ke ${teknijiName}`);
+          closeModal('tekniji');
+          selectedFCU = null;
+          loadFCUList();
+        } else {
+          alert('Gagal mengassign task: ' + data.error);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan: ' + error.message);
+      });
+    }
+
+    window.onclick = function(event) {
+      ['fcuModal', 'fcuDetailModal', 'teknijiModal', 'pumpModal', 'gensetModal', 'electricModal', 'mcfaModal'].forEach(modalId => {
+        const modal = document.getElementById(modalId);
+        if (event.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

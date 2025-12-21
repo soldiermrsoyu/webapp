@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Maintenance System</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="login-page">
+  <div class="login-container">
+    <div class="login-box">
+      <div class="login-header">
+        <h1>🏢 Maintenance</h1>
+        <p>System Management</p>
+      </div>
+      <form method="POST" action="/login" class="login-form">
+        <div class="form-group">
+          <label for="user">Username</label>
+          <input type="text" id="user" name="user" placeholder="Enter username" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter password" required>
+        </div>
+        <button type="submit" class="login-btn">Login</button>
+        <div class="credentials-info">
+          <p><strong>Demo Credentials:</strong></p>
+          <p>SPV: spv1 / 123</p>
+          <p>Teknisi: tek1 / 123</p>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

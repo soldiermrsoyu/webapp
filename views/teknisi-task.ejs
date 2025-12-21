@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Menu - Teknisi</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="dashboard">
+    <h1>Task Menu</h1>
+    <p>Tugas maintenance yang diberikan</p>
+    
+    <div id="taskList" class="task-list"></div>
+  </div>
+
+  <!-- Report Modal -->
+  <div id="reportModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Form Laporan</h2>
+        <span class="close" onclick="closeReportModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Temuan</label>
+          <textarea id="findings" placeholder="Jelaskan temuan dari maintenance" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ddd;" rows="4"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Tindakan yang Dilakukan</label>
+          <textarea id="actionsTaken" placeholder="Tindakan yang telah diambil" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ddd;" rows="4"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Tanggal Maintenance Berikutnya</label>
+          <input type="date" id="nextDate" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+        </div>
+        <div style="margin-top: 20px;">
+          <button onclick="submitReport()" class="btn-primary">Submit Laporan</button>
+          <button onclick="closeReportModal()" class="btn-secondary">Batal</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="/teknisi" class="nav-item" id="home-nav">
+      <div class="nav-icon">🏠</div>
+      <div class="nav-label">Home</div>
+    </a>
+    <a href="/teknisi/task" class="nav-item active" id="task-nav">
+      <div class="nav-icon">✓</div>
+      <div class="nav-label">Task</div>
+    </a>
+    <a href="/teknisi/profile" class="nav-item" id="profile-nav">
+      <div class="nav-icon">👤</div>
+      <div class="nav-label">Profile</div>
+    </a>
+  </nav>
+
+  <script>
+    let selectedAssignmentId = null;
+
+    function loadTasks() {
+      fetch('/api/my-tasks')
+        .then(response => response.json())
+        .then(data => {
+          const taskList = document.getElementById('taskList');
+          if (data.length === 0) {
+            taskList.innerHTML = '<p style="text-align: center; padding: 20px;">Tidak ada tugas untuk saat ini</p>';
+            return;
+          }
+          
+          let html = '<div class="tasks-grid">';
+          data.forEach(task => {
+            const statusClass = task.status === 'completed' ? 'completed' : 'assigned';
+            html += `<div class="task-card ${statusClass}">
+              <div class="task-header">
+                <h3>${task.fcu_id}</h3>
+                <span class="status-badge">${task.status}</span>
+              </div>
+              <div class="task-details">
+                <p><strong>Lokasi:</strong> ${task.lantai} - ${task.alias}</p>
+                <p><strong>Unit:</strong> ${task.unit}</p>
+              </div>
+              <div class="task-actions">
+                ${task.status === 'assigned' ? `<button onclick="viewReport(${task.id})" class="btn-primary">Laporan</button>` : `<button onclick="viewReportResult(${task.id})" class="btn-secondary">Lihat Laporan</button>`}
+              </div>
+            </div>`;
+          });
+          html += '</div>';
+          taskList.innerHTML = html;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          document.getElementById('taskList').innerHTML = '<p>Error loading tasks</p>';
+        });
+    }
+
+    function viewReport(assignmentId) {
+      selectedAssignmentId = assignmentId;
+      document.getElementById('findings').value = '';
+      document.getElementById('actionsTaken').value = '';
+      document.getElementById('nextDate').value = '';
+      document.getElementById('reportModal').style.display = 'block';
+    }
+
+    function closeReportModal() {
+      document.getElementById('reportModal').style.display = 'none';
+      selectedAssignmentId = null;
+    }
+
+    function submitReport() {
+      const findings = document.getElementById('findings').value;
+      const actionsTaken = document.getElementById('actionsTaken').value;
+      const nextDate = document.getElementById('nextDate').value;
+
+      if (!findings.trim() || !actionsTaken.trim()) {
+        alert('Semua field harus diisi');
+        return;
+      }
+
+      fetch('/api/submit-report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          assignment_id: selectedAssignmentId,
+          findings,
+          actions_taken: actionsTaken,
+          next_maintenance_date: nextDate
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Laporan berhasil dikirim');
+          closeReportModal();
+          loadTasks();
+        } else {
+          alert('Gagal mengirim laporan: ' + data.error);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan');
+      });
+    }
+
+    function viewReportResult(assignmentId) {
+      fetch(`/api/report/${assignmentId}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.found) {
+            alert(`Temuan: ${data.data.findings}\n\nTindakan: ${data.data.actions_taken}\n\nMaintenance Berikutnya: ${data.data.next_maintenance_date}`);
+          } else {
+            alert('Laporan tidak ditemukan');
+          }
+        });
+    }
+
+    // Load tasks on page load
+    document.addEventListener('DOMContentLoaded', loadTasks);
+
+    window.onclick = function(event) {
+      const modal = document.getElementById('reportModal');
+      if (event.target === modal) {
+        closeReportModal();
+      }
+    }
+  </script>
+</body>
+</html>

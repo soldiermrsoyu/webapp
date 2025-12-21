@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - SPV</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="dashboard">
+    <h1>Profile</h1>
+    
+    <div class="profile-container">
+      <div class="profile-header">
+        <div class="profile-picture">👤</div>
+        <div class="profile-info">
+          <h2><%= user.user %></h2>
+          <p>Supervisor (SPV)</p>
+        </div>
+      </div>
+
+      <div class="profile-section">
+        <h3>Informasi Akun</h3>
+        <div class="profile-field">
+          <label>Username</label>
+          <input type="text" value="<%= user.user %>" disabled>
+        </div>
+      </div>
+
+      <div class="profile-section">
+        <h3>Keamanan</h3>
+        <div class="profile-field">
+          <label>Password</label>
+          <input type="password" placeholder="••••••••" id="passwordInput" disabled value="••••••••">
+          <button onclick="togglePasswordChange()" class="btn-secondary" id="passwordBtn">Ubah Password</button>
+        </div>
+        <div id="passwordChangeForm" style="display: none;">
+          <div class="profile-field">
+            <label>Password Baru</label>
+            <input type="password" id="newPassword" placeholder="Masukkan password baru">
+          </div>
+          <button onclick="updatePassword()" class="btn-primary">Simpan Password</button>
+          <button onclick="cancelPasswordChange()" class="btn-secondary">Batal</button>
+        </div>
+      </div>
+
+      <div class="profile-actions">
+        <a href="/logout" class="btn-logout">Logout</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="/spv" class="nav-item" id="home-nav">
+      <div class="nav-icon">🏠</div>
+      <div class="nav-label">Home</div>
+    </a>
+    <a href="/spv/task" class="nav-item" id="task-nav">
+      <div class="nav-icon">✓</div>
+      <div class="nav-label">Task</div>
+    </a>
+    <a href="/spv/profile" class="nav-item active" id="profile-nav">
+      <div class="nav-icon">👤</div>
+      <div class="nav-label">Profile</div>
+    </a>
+  </nav>
+
+  <script>
+    function togglePasswordChange() {
+      const form = document.getElementById('passwordChangeForm');
+      const btn = document.getElementById('passwordBtn');
+      if (form.style.display === 'none') {
+        form.style.display = 'block';
+        btn.textContent = 'Sembunyikan';
+      } else {
+        form.style.display = 'none';
+        btn.textContent = 'Ubah Password';
+      }
+    }
+
+    function cancelPasswordChange() {
+      document.getElementById('passwordChangeForm').style.display = 'none';
+      document.getElementById('newPassword').value = '';
+      document.getElementById('passwordBtn').textContent = 'Ubah Password';
+    }
+
+    function updatePassword() {
+      const newPassword = document.getElementById('newPassword').value;
+      if (newPassword.trim() === '') {
+        alert('Password tidak boleh kosong');
+        return;
+      }
+      
+      fetch('/api/change-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ password: newPassword })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Password berhasil diubah');
+          cancelPasswordChange();
+        } else {
+          alert('Gagal mengubah password');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan');
+      });
+    }
+  </script>
+</body>
+</html>
