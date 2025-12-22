@@ -195,8 +195,15 @@
           
           let html = '<div class="fcu-items">';
           data.forEach((item, index) => {
-            html += `<div class="fcu-item" data-index="${index}" data-id="${item.id}" data-lantai="${item.lantai}" data-unit="${item.unit}" data-alias="${item.alias}" data-tanggal="${item.tanggal}">
-              <div class="fcu-id">${item.id}</div>
+            const date = new Date(item.tanggal).toLocaleDateString('id-ID', {
+              day: 'numeric', month: 'short', year: 'numeric'
+            });
+            html += `<div class="fcu-item" data-index="${index}" data-id="${item.id}" data-lantai="${item.lantai}" data-unit="${item.unit}" data-alias="${item.alias}" data-tanggal="${date}">
+              <div class="fcu-id">${item.unit}</div>
+              <div class="fcu-info">
+                <span>${item.lantai}</span>
+                <small>${item.alias}</small>
+              </div>
               <div class="fcu-buttons">
                 <button class="btn-small fcu-detail-btn">Detail</button>
               </div>
@@ -227,6 +234,8 @@
 
     function showFCUDetail(id, lantai, unit, alias, tanggal) {
       console.log('Setting selectedFCU:', { id, lantai, unit, alias, tanggal });
+      // Ensure id is an integer
+      id = parseInt(id);
       selectedFCU = { id, lantai, unit, alias, tanggal };
       document.getElementById('detail-id').textContent = id;
       document.getElementById('detail-lantai').textContent = lantai;

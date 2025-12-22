@@ -10,11 +10,17 @@
   <div class="dashboard">
     <h1>SPV Dashboard</h1>
     <p>Halo <%= user.user %></p>
-    <div class="card">
-      <a href="/assign-teknisi">Assign Teknisi</a>
-    </div>
-    <div class="card">
-      <a href="/approve-maintenance">Approve Maintenance</a>
+    <div class="menu-grid">
+      <div class="menu-card" onclick="location.href='/spv/task'">
+        <div class="menu-icon">📋</div>
+        <div class="menu-title">Task Menu</div>
+        <div class="menu-desc">Kelola jadwal dan penugasan</div>
+      </div>
+      <div class="menu-card" onclick="location.href='/spv/profile'">
+        <div class="menu-icon">👤</div>
+        <div class="menu-title">Profile</div>
+        <div class="menu-desc">Lihat profil saya</div>
+      </div>
     </div>
   </div>
 

@@ -23,13 +23,28 @@
           <input type="password" id="password" name="password" placeholder="Enter password" required>
         </div>
         <button type="submit" class="login-btn">Login</button>
-        <div class="credentials-info">
-          <p><strong>Demo Credentials:</strong></p>
-          <p>SPV: spv1 / 123</p>
-          <p>Teknisi: tek1 / 123</p>
+        <div class="credentials-info" style="margin-top: 20px; text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px; font-size: 0.9em;">
+          <p style="margin-bottom: 10px; color: #666;"><strong>Demo Credentials:</strong></p>
+          <div style="display: flex; justify-content: center; gap: 20px;">
+            <div style="cursor: pointer; padding: 5px 10px; background: #e9ecef; border-radius: 4px;" onclick="fillCreds('spv', 'spv123')">
+              <strong>SPV</strong><br>
+              <small>Pass: spv123</small>
+            </div>
+            <div style="cursor: pointer; padding: 5px 10px; background: #e9ecef; border-radius: 4px;" onclick="fillCreds('teknisi1', 'tek123')">
+              <strong>Teknisi</strong><br>
+              <small>Pass: tek123</small>
+            </div>
+          </div>
         </div>
       </form>
     </div>
   </div>
+
+  <script>
+    function fillCreds(user, pass) {
+      document.getElementById('user').value = user;
+      document.getElementById('password').value = pass;
+    }
+  </script>
 </body>
 </html>
