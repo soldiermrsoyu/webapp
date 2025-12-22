@@ -3,18 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teknisi Dashboard</title>
+  <title>Pasukan Keong - Teknisi</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <div class="dashboard">
-    <h1>Teknisi Dashboard</h1>
-    <p>Halo <%= user.user %></p>
-    <div class="card">
-      <a href="/checklist">Checklist FCU</a>
+  <div class="container dashboard">
+    <div class="header-section">
+      <h1>Pasukan Keong - Teknisi</h1>
+      <p>Halo, <%= user.user %></p>
     </div>
-    <div class="card">
-      <a href="/submit-report">Submit Laporan</a>
+
+    <div class="menu-grid">
+      <div class="menu-card" onclick="location.href='/teknisi/task'">
+        <div class="menu-icon">📋</div>
+        <div class="menu-title">Task</div>
+        <div class="menu-desc">Daftar Tugas & Laporan</div>
+      </div>
     </div>
   </div>
 
@@ -24,9 +28,9 @@
       <div class="nav-icon">🏠</div>
       <div class="nav-label">Home</div>
     </a>
-    <a href="/teknisi/task" class="nav-item" id="task-nav">
-      <div class="nav-icon">✓</div>
-      <div class="nav-label">Task</div>
+    <a href="/teknisi/notifikasi" class="nav-item" id="notif-nav">
+      <div class="nav-icon">🔔</div>
+      <div class="nav-label">Notifikasi</div>
     </a>
     <a href="/teknisi/profile" class="nav-item" id="profile-nav">
       <div class="nav-icon">👤</div>

@@ -15,4 +15,8 @@ router.get('/teknisi/profile', auth, role('teknisi'), (req, res) => {
   res.render('teknisi-profile', { user: req.session.user });
 });
 
+router.get('/teknisi/notifikasi', auth, role('teknisi'), (req, res) => {
+  res.render('teknisi-notifikasi', { user: req.session.user });
+});
+
 module.exports = router;

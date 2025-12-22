@@ -7,30 +7,37 @@
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <div class="dashboard">
-    <h1>Task Menu</h1>
-    <p>Kelola perawatan peralatan</p>
+  <div class="container dashboard">
+    <div class="header-section">
+      <h1>Daftar Jadwal Maintenance</h1>
+      <button class="btn-back" onclick="location.href='/spv'">← Kembali</button>
+    </div>
     
-    <div class="equipment-grid">
-      <div class="equipment-card" onclick="showModal('fcu')">
-        <div class="equipment-icon">❄️</div>
-        <div class="equipment-name">FCU</div>
+    <div class="menu-grid">
+      <div class="menu-card" onclick="showModal('fcu')">
+        <div class="menu-icon">❄️</div>
+        <div class="menu-title">FCU</div>
+        <div class="menu-desc">Fan Coil Unit</div>
       </div>
-      <div class="equipment-card" onclick="showModal('pump')">
-        <div class="equipment-icon">💧</div>
-        <div class="equipment-name">PUMP</div>
+      <div class="menu-card" onclick="showModal('pump')">
+        <div class="menu-icon">💧</div>
+        <div class="menu-title">PUMP</div>
+        <div class="menu-desc">Water Pump System</div>
       </div>
-      <div class="equipment-card" onclick="showModal('genset')">
-        <div class="equipment-icon">⚡</div>
-        <div class="equipment-name">GENSET</div>
+      <div class="menu-card" onclick="showModal('genset')">
+        <div class="menu-icon">⚡</div>
+        <div class="menu-title">GENSET</div>
+        <div class="menu-desc">Generator Set</div>
       </div>
-      <div class="equipment-card" onclick="showModal('electric')">
-        <div class="equipment-icon">🔌</div>
-        <div class="equipment-name">ELECTRIC</div>
+      <div class="menu-card" onclick="showModal('electric')">
+        <div class="menu-icon">🔌</div>
+        <div class="menu-title">ELECTRIC</div>
+        <div class="menu-desc">Electrical Panel</div>
       </div>
-      <div class="equipment-card" onclick="showModal('mcfa')">
-        <div class="equipment-icon">⚙️</div>
-        <div class="equipment-name">MCFA</div>
+      <div class="menu-card" onclick="showModal('mcfa')">
+        <div class="menu-icon">⚙️</div>
+        <div class="menu-title">MCFA</div>
+        <div class="menu-desc">Fire Alarm System</div>
       </div>
     </div>
   </div>
@@ -81,8 +88,24 @@
           </table>
         </div>
         <div class="modal-actions" style="margin-top: 20px;">
+          <button onclick="showHistoryModal()" class="btn-secondary" style="background: #64748b;">Lihat Riwayat</button>
           <button onclick="showTeknijiModal()" class="btn-primary">Pilih Teknisi</button>
           <button onclick="closeModal('fcuDetail')" class="btn-secondary">Kembali</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- History Modal -->
+  <div id="historyModal" class="modal">
+    <div class="modal-content" style="max-width: 600px; max-height: 80vh; overflow-y: auto;">
+      <div class="modal-header">
+        <h2>Riwayat Maintenance</h2>
+        <span class="close" onclick="closeModal('history')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div id="historyContent" class="history-list">
+          <!-- History items will be injected here -->
         </div>
       </div>
     </div>
@@ -97,6 +120,9 @@
       </div>
       <div class="modal-body">
         <div id="teknijiList" class="tekniji-list"></div>
+        <div class="modal-actions" style="margin-top: 20px; text-align: right;">
+          <button onclick="submitMultipleAssignments()" class="btn-primary">Kirim Tugas</button>
+        </div>
       </div>
     </div>
   </div>
@@ -156,9 +182,9 @@
       <div class="nav-icon">🏠</div>
       <div class="nav-label">Home</div>
     </a>
-    <a href="/spv/task" class="nav-item active" id="task-nav">
-      <div class="nav-icon">✓</div>
-      <div class="nav-label">Task</div>
+    <a href="/spv/notifikasi" class="nav-item" id="notif-nav">
+      <div class="nav-icon">🔔</div>
+      <div class="nav-label">Notifikasi</div>
     </a>
     <a href="/spv/profile" class="nav-item" id="profile-nav">
       <div class="nav-icon">👤</div>
@@ -253,6 +279,49 @@
       showModal('tekniji');
     }
 
+    function showHistoryModal() {
+      if (!selectedFCU) return;
+      
+      const historyContent = document.getElementById('historyContent');
+      historyContent.innerHTML = '<p style="text-align: center; padding: 20px;">Memuat riwayat...</p>';
+      
+      showModal('history');
+      
+      fetch(`/api/fcu-history/${selectedFCU.id}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.length === 0) {
+            historyContent.innerHTML = '<p style="text-align: center; padding: 20px;">Belum ada riwayat untuk unit ini.</p>';
+            return;
+          }
+          
+          let html = '';
+          data.forEach(item => {
+            const date = new Date(item.created_at).toLocaleDateString('id-ID', {
+              day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+            html += `
+              <div class="history-item" style="border-bottom: 1px solid #eee; padding: 15px 0;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                  <strong style="color: var(--primary-color);">${date}</strong>
+                  <span style="font-size: 0.8rem; color: #666;">Oleh: ${item.teknisi_name}</span>
+                </div>
+                <div style="font-size: 0.9rem;">
+                  <p><strong>Temuan:</strong> ${item.findings}</p>
+                  <p><strong>Tindakan:</strong> ${item.actions_taken}</p>
+                  ${item.next_maintenance_date ? `<p style="color: #059669;"><strong>Jadwal Berikutnya:</strong> ${new Date(item.next_maintenance_date).toLocaleDateString('id-ID')}</p>` : ''}
+                </div>
+              </div>
+            `;
+          });
+          historyContent.innerHTML = html;
+        })
+        .catch(err => {
+          console.error('Error:', err);
+          historyContent.innerHTML = '<p style="text-align: center; color: red;">Gagal memuat riwayat.</p>';
+        });
+    }
+
     function loadTeknijiList() {
       fetch('/api/teknisi')
         .then(response => response.json())
@@ -265,21 +334,13 @@
           
           let html = '<div class="tekniji-items">';
           data.forEach(item => {
-            html += `<div class="tekniji-item" data-id="${item.id}" data-user="${item.user}">
-              <div class="tekniji-name">${item.user}</div>
-              <button class="btn-primary tekniji-select-btn">Pilih</button>
+            html += `<div class="tekniji-item" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+              <input type="checkbox" name="teknisi" value="${item.id}" id="tech-${item.id}" style="width: 20px; height: 20px;">
+              <label for="tech-${item.id}" class="tekniji-name">${item.user}</label>
             </div>`;
           });
           html += '</div>';
           teknijiList.innerHTML = html;
-          
-          // Add event listeners to all select buttons
-          document.querySelectorAll('.tekniji-select-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-              const item = this.closest('.tekniji-item');
-              assignToTekniji(parseInt(item.dataset.id), item.dataset.user);
-            });
-          });
         })
         .catch(error => {
           console.error('Error:', error);
@@ -287,44 +348,56 @@
         });
     }
 
-    function assignToTekniji(teknijiId, teknijiName) {
-      console.log('Assigning task with:', { selectedFCU, teknijiId });
+    function submitMultipleAssignments() {
+      const selectedTechs = Array.from(document.querySelectorAll('input[name="teknisi"]:checked'))
+        .map(cb => parseInt(cb.value));
       
+      if (selectedTechs.length === 0) {
+        alert('Pilih minimal satu teknisi');
+        return;
+      }
+
       if (!selectedFCU) {
         alert('Pilih FCU terlebih dahulu');
         return;
       }
 
-      if (!selectedFCU.id || !teknijiId) {
-        alert('Data tidak lengkap. FCU ID: ' + selectedFCU.id + ', Teknisi ID: ' + teknijiId);
-        return;
-      }
+      const payload = {
+        fcu_id: parseInt(selectedFCU.id),
+        teknisi_ids: selectedTechs
+      };
+
+      console.log('Sending payload:', payload);
 
       fetch('/api/assign-task', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
-        body: JSON.stringify({
-          fcu_id: selectedFCU.id,
-          teknisi_id: parseInt(teknijiId)
-        })
+        body: JSON.stringify(payload)
       })
-      .then(response => response.json())
+      .then(async response => {
+        const text = await response.text();
+        try {
+          return JSON.parse(text);
+        } catch (e) {
+          throw new Error('Server returned invalid JSON: ' + text);
+        }
+      })
       .then(data => {
-        console.log('Assignment response:', data);
         if (data.success) {
-          alert(`Task berhasil dikirim ke ${teknijiName}`);
+          alert(`Task berhasil dikirim ke ${selectedTechs.length} teknisi`);
           closeModal('tekniji');
           selectedFCU = null;
           loadFCUList();
         } else {
-          alert('Gagal mengassign task: ' + data.error);
+          alert('Gagal: ' + (data.error || 'Unknown error'));
         }
       })
       .catch(error => {
-        console.error('Error:', error);
-        alert('Terjadi kesalahan: ' + error.message);
+        console.error('Fetch error detail:', error);
+        alert('Terjadi kesalahan saat mengirim data.');
       });
     }
 

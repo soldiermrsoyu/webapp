@@ -16,31 +16,180 @@
 
   <!-- Report Modal -->
   <div id="reportModal" class="modal">
-    <div class="modal-content">
+    <div class="modal-content" style="max-width: 600px; max-height: 90vh; overflow-y: auto;">
       <div class="modal-header">
-        <h2>Form Laporan</h2>
+        <h2>Laporan Maintenance</h2>
         <span class="close" onclick="closeReportModal()">&times;</span>
       </div>
       <div class="modal-body">
-        <div class="form-group">
-          <label>Temuan</label>
-          <textarea id="findings" placeholder="Jelaskan temuan dari maintenance" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ddd;" rows="4"></textarea>
+        <div id="stepContainer"></div>
+        
+        <div id="finalForm" style="display: none;">
+          <div class="step-header">Langkah Terakhir: Ringkasan</div>
+          <div class="form-group" style="margin-bottom: 15px;">
+            <label>Temuan / Kondisi:</label>
+            <textarea id="findings" class="form-control" rows="3" placeholder="Jelaskan temuan di lapangan..."></textarea>
+          </div>
+          <div class="form-group" style="margin-bottom: 15px;">
+            <label>Tindakan yang Diambil:</label>
+            <textarea id="actionsTaken" class="form-control" rows="3" placeholder="Jelaskan perbaikan yang dilakukan..."></textarea>
+          </div>
+          <div class="form-group" style="margin-bottom: 15px;">
+            <label>Rencana Maintenance Berikutnya:</label>
+            <input type="date" id="nextDate" class="form-control">
+          </div>
         </div>
-        <div class="form-group">
-          <label>Tindakan yang Dilakukan</label>
-          <textarea id="actionsTaken" placeholder="Tindakan yang telah diambil" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ddd;" rows="4"></textarea>
-        </div>
-        <div class="form-group">
-          <label>Tanggal Maintenance Berikutnya</label>
-          <input type="date" id="nextDate" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
-        </div>
-        <div style="margin-top: 20px;">
-          <button onclick="submitReport()" class="btn-primary">Submit Laporan</button>
-          <button onclick="closeReportModal()" class="btn-secondary">Batal</button>
+
+        <div class="modal-actions" style="margin-top: 20px; display: flex; justify-content: space-between;">
+          <button id="prevBtn" onclick="prevStep()" class="btn-secondary" style="display: none;">Sebelumnya</button>
+          <div style="flex: 1;"></div>
+          <button id="nextBtn" onclick="nextStep()" class="btn-primary">Selanjutnya</button>
+          <button id="submitBtn" onclick="submitReport()" class="btn-primary" style="display: none;">Kirim Laporan</button>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- History Modal -->
+  <div id="historyModal" class="modal">
+    <div class="modal-content" style="max-width: 600px; max-height: 80vh; overflow-y: auto;">
+      <div class="modal-header">
+        <h2>Riwayat Maintenance</h2>
+        <span class="close" onclick="closeHistoryModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div id="historyContent" class="history-list">
+          <!-- History items will be injected here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pending Reason Modal -->
+  <div id="pendingModal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <h2>Alasan Pending</h2>
+        <span class="close" onclick="closePendingModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Kenapa tugas ini di-pending?</label>
+          <textarea id="pendingReason" class="form-control" rows="4" placeholder="Contoh: Sparepart belum tersedia, butuh alat tambahan, dll..."></textarea>
+        </div>
+        <div class="modal-actions" style="margin-top: 20px;">
+          <button onclick="submitPending()" class="btn-primary" style="width: 100%;">Simpan Alasan & Pending</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .form-control {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      font-size: 16px;
+      background: white;
+      appearance: none;
+    }
+    .photo-container {
+      border: 2px dashed var(--border-color);
+      border-radius: 16px;
+      padding: 30px 20px;
+      text-align: center;
+      background: #f8fafc;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .photo-container:active {
+      background: #f1f5f9;
+      border-color: var(--primary-color);
+    }
+    .photo-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-muted);
+    }
+    .photo-placeholder .icon {
+      font-size: 2.5rem;
+    }
+    .photo-preview-wrapper {
+      position: relative;
+    }
+    .photo-preview {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+    .photo-actions {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+    }
+    .step-item {
+      display: none;
+      animation: modalSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .step-item.active {
+      display: block;
+    }
+    .step-header {
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: var(--primary-color);
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .checklist-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      padding: 14px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: white;
+    }
+    .checklist-option:active {
+      background: #f8fafc;
+      border-color: var(--primary-color);
+      transform: scale(0.98);
+    }
+    .checklist-option input {
+      width: 22px;
+      height: 22px;
+      accent-color: var(--primary-color);
+    }
+    .checklist-option label {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+    .progress-bar {
+      height: 8px;
+      background: #f1f5f9;
+      border-radius: 4px;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--primary-color);
+      width: 0%;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  </style>
 
   <!-- Bottom Navigation -->
   <nav class="bottom-nav">
@@ -48,9 +197,9 @@
       <div class="nav-icon">🏠</div>
       <div class="nav-label">Home</div>
     </a>
-    <a href="/teknisi/task" class="nav-item active" id="task-nav">
-      <div class="nav-icon">✓</div>
-      <div class="nav-label">Task</div>
+    <a href="/teknisi/notifikasi" class="nav-item" id="notif-nav">
+      <div class="nav-icon">🔔</div>
+      <div class="nav-label">Notifikasi</div>
     </a>
     <a href="/teknisi/profile" class="nav-item" id="profile-nav">
       <div class="nav-icon">👤</div>
@@ -60,54 +209,356 @@
 
   <script>
     let selectedAssignmentId = null;
+    let currentStep = 0;
+    const checklistItems = [
+      { text: "Periksa dan perbaiki sumber-sumber suara tidak normal, V & A", type: "radio", photo: true },
+      { text: "Periksa kondisi air filter element (tidak robek)", type: "radio", photo: true },
+      { text: "Periksa dan perbaiki isolasi pemipaan yang rusak", type: "radio", photo: false },
+      { text: "Periksa dan perbaiki isolasi ducting yang rusak", type: "radio", photo: false },
+      { text: "Periksa kecepatan udara (m/s)", type: "text", photo: true, placeholder: "Contoh: 2.5 m/s" },
+      { text: "Periksa kondisi kerja thermostat dan temperatur sensor", type: "radio", photo: false },
+      { text: "Periksa kondisi kerja sensor air flow switch alarm", type: "radio", photo: false },
+      { text: "Periksa kondisi fleksibel rubber joint pipe", type: "radio", photo: false },
+      { text: "Periksa kondisi kerja thermometer (In & Out)", type: "text", photo: true, placeholder: "Suhu In/Out" },
+      { text: "Periksa kondisi baut-mur dan ikatan support", type: "radio", photo: false },
+      { text: "Periksa kondisi spring mounting pada support", type: "radio", photo: false },
+      { text: "Periksa kondisi fleksibel ducting", type: "radio", photo: false },
+      { text: "Bersihkan drain pan kondensat", type: "radio", photo: true },
+      { text: "Bersihkan saluran pipa drain kondensat", type: "radio", photo: false },
+      { text: "Bersihkan & periksa kondisi kerja sensor modul thermostat", type: "radio", photo: false },
+      { text: "Ukur temperatur udara pada defuser supply", type: "text", photo: true, placeholder: "Suhu Supply" },
+      { text: "Periksa kontrol dari BAS (Start-Stop-Status)", type: "radio", photo: false },
+      { text: "Bersihkan & periksa kondisi kerja modul air flow switch alarm", type: "radio", photo: false },
+      { text: "Test fungsi modul air flow switch alarm", type: "radio", photo: false },
+      { text: "Check phase motor", type: "text", photo: false, placeholder: "R-S-T" },
+      { text: "Periksa valve masuk (buka penuh/tutup rapat)", type: "radio", photo: false },
+      { text: "Periksa valve keluar (buka penuh/tutup rapat)", type: "radio", photo: false },
+      { text: "Periksa kondisi kerja motorized two way valve", type: "radio", photo: false },
+      { text: "Bersihkan strainer", type: "radio", photo: true },
+      { text: "Periksa dan kencangkan terminasi pengkabelan", type: "radio", photo: false },
+      { text: "Periksa kondisi kerja kontaktor starting motor blower", type: "radio", photo: false },
+      { text: "Bersihkan fan coil evaporator dengan air bertekanan", type: "radio", photo: true },
+      { text: "Menyisir Sirip-sirip evaporator yang rebah", type: "radio", photo: true },
+      { text: "Bersihkan sudu-sudu fan blower", type: "radio", photo: true },
+      { text: "Lakukan check list dan perawatan rutin electric motor blower", type: "radio", photo: false }
+    ];
 
-    function loadTasks() {
-      fetch('/api/my-tasks')
-        .then(response => response.json())
-        .then(data => {
-          const taskList = document.getElementById('taskList');
-          if (data.length === 0) {
-            taskList.innerHTML = '<p style="text-align: center; padding: 20px;">Tidak ada tugas untuk saat ini</p>';
-            return;
+    let checklistData = [];
+
+    function initChecklist() {
+      const container = document.getElementById('stepContainer');
+      if (checklistData.length === 0) {
+        checklistData = checklistItems.map(() => ({ value: '', note: '', photos: [] }));
+      }
+      
+      let html = `
+        <div class="progress-bar">
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
+      `;
+      
+      checklistItems.forEach((item, index) => {
+        const data = checklistData[index];
+        html += `
+          <div class="step-item" id="step-${index}">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <div class="step-header" style="margin-bottom: 0;">Langkah ${index + 1} dari ${checklistItems.length}</div>
+              <button onclick="showFormPendingModal()" class="btn-small" style="background: var(--warning-color); color: white; padding: 4px 10px; font-size: 0.75rem;">Pending Pekerjaan</button>
+            </div>
+            <p style="margin-bottom: 15px; font-weight: 500;">${item.text}</p>
+            
+            <div class="input-section" style="margin-bottom: 20px;">
+              ${item.type === 'radio' ? `
+                <div class="checklist-option" onclick="selectRadio(${index}, 'ok')">
+                  <input type="radio" name="check-${index}" id="check-${index}-ok" value="ok" ${data.value === 'ok' ? 'checked' : ''}>
+                  <label for="check-${index}-ok">Selesai / OK</label>
+                </div>
+              ` : `
+                <div class="form-group">
+                  <input type="text" id="input-${index}" class="form-control" placeholder="${item.placeholder || 'Masukkan hasil pemeriksaan'}" oninput="updateInputValue(${index}, this.value)" value="${data.value || ''}">
+                </div>
+              `}
+            </div>
+
+            <div class="note-section" style="margin-bottom: 20px;">
+              <label style="display: block; font-size: 0.85rem; margin-bottom: 5px; color: #666;">Catatan Tambahan:</label>
+              <textarea id="note-${index}" class="form-control" placeholder="Tambahkan catatan jika diperlukan..." rows="2" oninput="updateNoteValue(${index}, this.value)">${data.note || ''}</textarea>
+            </div>
+
+            ${item.photo ? `
+              <div class="photo-section" style="margin-bottom: 20px;">
+                <label style="display: block; font-size: 0.85rem; margin-bottom: 5px; color: #666;">Foto Bukti (Maks 3):</label>
+                <div id="photo-grid-${index}" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px;">
+                  ${renderPhotos(index)}
+                </div>
+                ${data.photos.length < 3 ? `
+                  <div id="photo-container-${index}" class="photo-container" style="padding: 15px;">
+                    <div class="photo-placeholder" onclick="triggerCamera(${index})">
+                      <span class="icon" style="font-size: 1.5rem;">📷</span>
+                      <span style="font-size: 0.8rem;">Tambah Foto</span>
+                    </div>
+                  </div>
+                ` : ''}
+                <input type="file" id="camera-${index}" accept="image/*" capture="environment" style="display: none;" onchange="handlePhotoCapture(${index}, this)">
+              </div>
+            ` : ''}
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function renderPhotos(index) {
+      const photos = checklistData[index].photos;
+      return photos.map((photo, pIdx) => `
+        <div class="photo-preview-wrapper" style="position: relative;">
+          <img src="${photo}" class="photo-preview" style="width: 100%; height: 80px; object-fit: cover; border-radius: 8px;" onclick="previewImage('${photo}')">
+          <button onclick="removePhoto(${index}, ${pIdx})" style="position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; cursor: pointer;">&times;</button>
+        </div>
+      `).join('');
+    }
+
+    function removePhoto(index, photoIndex) {
+      checklistData[index].photos.splice(photoIndex, 1);
+      initChecklist(); // Re-render this step
+      document.getElementById(`step-${currentStep}`).classList.add('active');
+    }
+
+    function selectRadio(index, value) {
+      document.getElementById(`check-${index}-${value}`).checked = true;
+      checklistData[index].value = value;
+      updateProgress();
+    }
+
+    function updateInputValue(index, value) {
+      checklistData[index].value = value;
+    }
+
+    function updateNoteValue(index, value) {
+      checklistData[index].note = value;
+    }
+
+    function triggerCamera(index) {
+      document.getElementById(`camera-${index}`).click();
+    }
+
+    function handlePhotoCapture(index, input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const imageData = e.target.result;
+          if (checklistData[index].photos.length < 3) {
+            checklistData[index].photos.push(imageData);
+            initChecklist(); // Re-render
+            document.getElementById(`step-${currentStep}`).classList.add('active');
           }
-          
-          let html = '<div class="tasks-grid">';
-          data.forEach(task => {
-            const statusClass = task.status === 'completed' ? 'completed' : 'assigned';
-            html += `<div class="task-card ${statusClass}">
-              <div class="task-header">
-                <h3>${task.fcu_id}</h3>
-                <span class="status-badge">${task.status}</span>
-              </div>
-              <div class="task-details">
-                <p><strong>Lokasi:</strong> ${task.lantai} - ${task.alias}</p>
-                <p><strong>Unit:</strong> ${task.unit}</p>
-              </div>
-              <div class="task-actions">
-                ${task.status === 'assigned' ? `<button onclick="viewReport(${task.id})" class="btn-primary">Laporan</button>` : `<button onclick="viewReportResult(${task.id})" class="btn-secondary">Lihat Laporan</button>`}
-              </div>
-            </div>`;
-          });
-          html += '</div>';
-          taskList.innerHTML = html;
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          document.getElementById('taskList').innerHTML = '<p>Error loading tasks</p>';
-        });
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function previewImage(src) {
+      // Create a simple overlay for preview
+      const overlay = document.createElement('div');
+      overlay.style.position = 'fixed';
+      overlay.style.top = '0';
+      overlay.style.left = '0';
+      overlay.style.width = '100%';
+      overlay.style.height = '100%';
+      overlay.style.backgroundColor = 'rgba(0,0,0,0.9)';
+      overlay.style.zIndex = '2000';
+      overlay.style.display = 'flex';
+      overlay.style.flexDirection = 'column';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+      overlay.onclick = () => document.body.removeChild(overlay);
+
+      const img = document.createElement('img');
+      img.src = src;
+      img.style.maxWidth = '90%';
+      img.style.maxHeight = '80%';
+      img.style.border = '2px solid white';
+      img.style.borderRadius = '8px';
+
+      const closeText = document.createElement('div');
+      closeText.textContent = 'Ketuk di mana saja untuk menutup';
+      closeText.style.color = 'white';
+      closeText.style.marginTop = '20px';
+
+      overlay.appendChild(img);
+      overlay.appendChild(closeText);
+      document.body.appendChild(overlay);
+    }
+
+    function nextStep() {
+      const item = checklistItems[currentStep];
+      const data = checklistData[currentStep];
+
+      // Validation
+      if (item.type === 'radio' && !data.value) {
+        alert('Harap pilih status OK.');
+        return;
+      }
+      if (item.type === 'text' && !data.value.trim()) {
+        alert('Harap isi hasil pemeriksaan.');
+        return;
+      }
+      if (item.photo && data.photos.length === 0) {
+        alert('Harap ambil minimal 1 foto bukti.');
+        return;
+      }
+
+      // Hide current
+      document.getElementById(`step-${currentStep}`).classList.remove('active');
+      
+      currentStep++;
+
+      if (currentStep < checklistItems.length) {
+        document.getElementById(`step-${currentStep}`).classList.add('active');
+        document.getElementById('prevBtn').style.display = 'block';
+      } else {
+        document.getElementById('finalForm').style.display = 'block';
+        document.getElementById('nextBtn').style.display = 'none';
+        document.getElementById('submitBtn').style.display = 'block';
+        document.getElementById('prevBtn').style.display = 'block';
+      }
+      updateProgress();
+    }
+
+    function prevStep() {
+      if (currentStep === 0) return;
+
+      if (currentStep < checklistItems.length) {
+        document.getElementById(`step-${currentStep}`).classList.remove('active');
+      } else {
+        document.getElementById('finalForm').style.display = 'none';
+        document.getElementById('submitBtn').style.display = 'none';
+        document.getElementById('nextBtn').style.display = 'block';
+      }
+
+      currentStep--;
+
+      if (currentStep < checklistItems.length) {
+        document.getElementById(`step-${currentStep}`).classList.add('active');
+        if (currentStep === 0) document.getElementById('prevBtn').style.display = 'none';
+      }
+      updateProgress();
     }
 
     function viewReport(assignmentId) {
       selectedAssignmentId = assignmentId;
+      currentStep = 0;
+      checklistData = []; // Reset
+
+      // Reset form fields
       document.getElementById('findings').value = '';
       document.getElementById('actionsTaken').value = '';
       document.getElementById('nextDate').value = '';
-      document.getElementById('reportModal').style.display = 'block';
+
+      // Try to load temporary progress
+      fetch(`/api/temp-progress/${assignmentId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.found) {
+            const temp = data.data;
+            currentStep = temp.current_step || 0;
+            checklistData = temp.checklist_data || [];
+            document.getElementById('findings').value = temp.findings || '';
+            document.getElementById('actionsTaken').value = temp.actions_taken || '';
+            if (temp.next_maintenance_date) {
+              document.getElementById('nextDate').value = new Date(temp.next_maintenance_date).toISOString().split('T')[0];
+            }
+          }
+          
+          initChecklist();
+          
+          // Hide all steps first
+          document.querySelectorAll('.step-item').forEach(el => el.classList.remove('active'));
+          
+          if (currentStep < checklistItems.length) {
+            document.getElementById(`step-${currentStep}`).classList.add('active');
+            document.getElementById('finalForm').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'block';
+            document.getElementById('submitBtn').style.display = 'none';
+          } else {
+            document.getElementById('finalForm').style.display = 'block';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('submitBtn').style.display = 'block';
+          }
+          
+          document.getElementById('prevBtn').style.display = currentStep > 0 ? 'block' : 'none';
+          document.getElementById('reportModal').style.display = 'block';
+          updateProgress();
+        })
+        .catch(err => {
+          console.error('Error loading temp progress:', err);
+          initChecklist();
+          document.getElementById('step-0').classList.add('active');
+          document.getElementById('reportModal').style.display = 'block';
+          updateProgress();
+        });
+    }
+
+    let isFormPending = false;
+    function showFormPendingModal() {
+      isFormPending = true;
+      document.getElementById('pendingReason').value = '';
+      document.getElementById('pendingModal').style.display = 'block';
+      // We don't close reportModal yet, just show pendingModal on top
+    }
+
+    function submitPending() {
+      const reason = document.getElementById('pendingReason').value;
+      if (!reason.trim()) {
+        alert('Harap isi alasan pending');
+        return;
+      }
+
+      const payload = {
+        assignment_id: selectedAssignmentId,
+        reason: reason
+      };
+
+      // Only include form data if we are pending from within the form
+      if (isFormPending) {
+        payload.current_step = currentStep;
+        payload.checklist_data = checklistData;
+        payload.findings = document.getElementById('findings').value;
+        payload.actions_taken = document.getElementById('actionsTaken').value;
+        payload.next_maintenance_date = document.getElementById('nextDate').value;
+      }
+
+      fetch('/api/pending-task', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert('Tugas berhasil di-pending' + (isFormPending ? ' dan progress disimpan' : ''));
+          closePendingModal();
+          if (isFormPending) closeReportModal();
+          loadTasks();
+        } else {
+          alert('Gagal pending tugas: ' + data.error);
+        }
+      })
+      .catch(err => {
+        console.error('Error:', err);
+        alert('Terjadi kesalahan saat menghubungi server');
+      });
+    }
+
+    function closePendingModal() {
+      document.getElementById('pendingModal').style.display = 'none';
+      isFormPending = false;
     }
 
     function closeReportModal() {
       document.getElementById('reportModal').style.display = 'none';
       selectedAssignmentId = null;
+      isFormPending = false; // Reset flag
     }
 
     function submitReport() {
@@ -120,17 +571,25 @@
         return;
       }
 
+      const payload = {
+        assignment_id: selectedAssignmentId,
+        findings,
+        actions_taken: actions_taken,
+        next_maintenance_date: nextDate,
+        checklist_items: checklistData.map((item, index) => ({
+          text: checklistItems[index].text,
+          value: item.value,
+          note: item.note,
+          photos: item.photos // This is array of base64
+        }))
+      };
+
       fetch('/api/submit-report', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          assignment_id: selectedAssignmentId,
-          findings,
-          actions_taken: actionsTaken,
-          next_maintenance_date: nextDate
-        })
+        body: JSON.stringify(payload)
       })
       .then(response => response.json())
       .then(data => {
@@ -144,7 +603,7 @@
       })
       .catch(error => {
         console.error('Error:', error);
-        alert('Terjadi kesalahan');
+        alert('Terjadi kesalahan saat mengirim data. Ukuran foto mungkin terlalu besar.');
       });
     }
 
@@ -160,13 +619,128 @@
         });
     }
 
+    function showPendingModal(assignmentId) {
+      selectedAssignmentId = assignmentId;
+      isFormPending = false; // Not from form
+      document.getElementById('pendingReason').value = '';
+      document.getElementById('pendingModal').style.display = 'block';
+    }
+
+    function loadTasks() {
+      fetch('/api/my-tasks')
+        .then(response => response.json())
+        .then(data => {
+          const taskList = document.getElementById('taskList');
+          if (data.length === 0) {
+            taskList.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 20px;">Tidak ada tugas untuk Anda saat ini.</p>';
+            return;
+          }
+
+          let html = '';
+          data.forEach(task => {
+            html += `
+              <div class="task-card">
+                <div class="task-header">
+                  <div class="task-unit">${task.unit}</div>
+                  <div class="status-badge status-${task.status}">${task.status}</div>
+                </div>
+                <div class="task-body">
+                  <p><strong>Lantai:</strong> ${task.lantai}</p>
+                  <p><strong>Alias:</strong> ${task.alias}</p>
+                </div>
+                <div class="task-actions">
+                  ${(task.status === 'assigned' || task.status === 'pending') ? `
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                      <div style="display: flex; gap: 10px;">
+                        <button onclick="viewReport(${task.id})" class="btn-primary" style="flex: 1;">${task.status === 'pending' ? 'Lanjutkan' : 'Kerjakan'}</button>
+                        <button onclick="showPendingModal(${task.id})" class="btn-secondary" style="background: var(--warning-color); color: white; flex: 1;">Pending</button>
+                      </div>
+                      <button onclick="showHistoryModalForTeknisi(${task.fcu_id})" class="btn-secondary" style="background: #64748b; width: 100%;">Riwayat</button>
+                    </div>
+                  ` : `
+                    <button onclick="viewReportResult(${task.id})" class="btn-secondary">Lihat Laporan</button>
+                  `}
+                </div>
+              </div>
+            `;
+          });
+          taskList.innerHTML = html;
+        })
+        .catch(error => {
+          console.error('Error loading tasks:', error);
+          document.getElementById('taskList').innerHTML = '<p>Gagal memuat daftar tugas.</p>';
+        });
+    }
+
+    function showHistoryModalForTeknisi(fcuId) {
+      // Reuse the logic but with a dedicated modal in this view
+      const historyContent = document.getElementById('historyContent');
+      historyContent.innerHTML = '<p style="text-align: center; padding: 20px;">Memuat riwayat...</p>';
+      
+      document.getElementById('historyModal').style.display = 'block';
+      
+      fetch(`/api/fcu-history/${fcuId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.length === 0) {
+            historyContent.innerHTML = '<p style="text-align: center; padding: 20px;">Belum ada riwayat untuk unit ini.</p>';
+            return;
+          }
+          
+          let html = '';
+          data.forEach(item => {
+            const date = new Date(item.created_at).toLocaleDateString('id-ID', {
+              day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+            html += `
+              <div class="history-item" style="border-bottom: 1px solid #eee; padding: 15px 0;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                  <strong style="color: var(--primary-color);">${date}</strong>
+                  <span style="font-size: 0.8rem; color: #666;">Oleh: ${item.teknisi_name}</span>
+                </div>
+                <div style="font-size: 0.9rem;">
+                  <p><strong>Temuan:</strong> ${item.findings}</p>
+                  <p><strong>Tindakan:</strong> ${item.actions_taken}</p>
+                </div>
+              </div>
+            `;
+          });
+          historyContent.innerHTML = html;
+        })
+        .catch(err => {
+          console.error('Error:', err);
+          historyContent.innerHTML = '<p style="text-align: center; color: red;">Gagal memuat riwayat.</p>';
+        });
+    }
+
+    function closeHistoryModal() {
+      document.getElementById('historyModal').style.display = 'none';
+    }
+
+    function updateProgress() {
+      const fill = document.getElementById('progressFill');
+      if (fill) {
+        const percentage = (currentStep / checklistItems.length) * 100;
+        fill.style.width = percentage + '%';
+      }
+    }
+
     // Load tasks on page load
     document.addEventListener('DOMContentLoaded', loadTasks);
 
     window.onclick = function(event) {
-      const modal = document.getElementById('reportModal');
-      if (event.target === modal) {
+      const reportModal = document.getElementById('reportModal');
+      const pendingModal = document.getElementById('pendingModal');
+      const historyModal = document.getElementById('historyModal');
+      
+      if (event.target === reportModal) {
         closeReportModal();
+      }
+      if (event.target === pendingModal) {
+        closePendingModal();
+      }
+      if (event.target === historyModal) {
+        closeHistoryModal();
       }
     }
   </script>

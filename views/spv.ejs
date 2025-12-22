@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SPV Dashboard</title>
+  <title>Pasukan Keong - SPV</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <div class="dashboard">
-    <h1>SPV Dashboard</h1>
+  <div class="container dashboard">
+    <h1>Pasukan Keong - SPV</h1>
     <p>Halo <%= user.user %></p>
     <div class="menu-grid">
       <div class="menu-card" onclick="location.href='/spv/task'">
@@ -16,10 +16,15 @@
         <div class="menu-title">Task Menu</div>
         <div class="menu-desc">Kelola jadwal dan penugasan</div>
       </div>
-      <div class="menu-card" onclick="location.href='/spv/profile'">
-        <div class="menu-icon">👤</div>
-        <div class="menu-title">Profile</div>
-        <div class="menu-desc">Lihat profil saya</div>
+      <div class="menu-card" onclick="location.href='/spv/rencana'">
+        <div class="menu-icon">🗓️</div>
+        <div class="menu-title">Progres Pekerjaan</div>
+        <div class="menu-desc">Daftar tugas teknisi</div>
+      </div>
+      <div class="menu-card" onclick="location.href='/spv/laporan'">
+        <div class="menu-icon">📊</div>
+        <div class="menu-title">Laporan</div>
+        <div class="menu-desc">Hasil kerja teknisi</div>
       </div>
     </div>
   </div>
@@ -30,9 +35,9 @@
       <div class="nav-icon">🏠</div>
       <div class="nav-label">Home</div>
     </a>
-    <a href="/spv/task" class="nav-item" id="task-nav">
-      <div class="nav-icon">✓</div>
-      <div class="nav-label">Task</div>
+    <a href="/spv/notifikasi" class="nav-item" id="notif-nav">
+      <div class="nav-icon">🔔</div>
+      <div class="nav-label">Notifikasi</div>
     </a>
     <a href="/spv/profile" class="nav-item" id="profile-nav">
       <div class="nav-icon">👤</div>
@@ -49,6 +54,10 @@
     
     if (currentPage === '/spv') {
       document.getElementById('home-nav')?.classList.add('active');
+    } else if (currentPage === '/spv/notifikasi') {
+      document.getElementById('notif-nav')?.classList.add('active');
+    } else if (currentPage === '/spv/profile') {
+      document.getElementById('profile-nav')?.classList.add('active');
     }
   </script>
 </body>

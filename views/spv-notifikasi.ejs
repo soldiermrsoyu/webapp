@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifikasi - SPV</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .notif-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .notif-item {
+      background: white;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .notif-icon {
+      font-size: 1.5rem;
+      background: #f0f9ff;
+      padding: 8px;
+      border-radius: 10px;
+    }
+    .notif-content {
+      flex: 1;
+    }
+    .notif-title {
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+    .notif-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="container dashboard">
+    <div class="header-section">
+      <h1>Notifikasi</h1>
+      <button class="btn-back" onclick="location.href='/spv'">← Kembali</button>
+    </div>
+
+    <div class="notif-list">
+      <div class="empty-state">
+        <div style="font-size: 3rem; margin-bottom: 10px;">🔔</div>
+        <p>Belum ada notifikasi baru.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="/spv" class="nav-item" id="home-nav">
+      <div class="nav-icon">🏠</div>
+      <div class="nav-label">Home</div>
+    </a>
+    <a href="/spv/notifikasi" class="nav-item active" id="notif-nav">
+      <div class="nav-icon">🔔</div>
+      <div class="nav-label">Notifikasi</div>
+    </a>
+    <a href="/spv/profile" class="nav-item" id="profile-nav">
+      <div class="nav-icon">👤</div>
+      <div class="nav-label">Profile</div>
+    </a>
+  </nav>
+
+  <script>
+    // Set active nav item based on current page
+    const currentPage = window.location.pathname;
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.classList.remove('active');
+    });
+    
+    if (currentPage === '/spv/notifikasi') {
+      document.getElementById('notif-nav')?.classList.add('active');
+    }
+  </script>
+</body>
+</html>

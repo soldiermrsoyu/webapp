@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rencana Kerja - SPV</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .status-badge {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .status-assigned { background: #e0f2fe; color: #0369a1; }
+    .status-in_progress { background: #fef3c7; color: #92400e; }
+    .status-pending { background: #fef3c7; color: #92400e; }
+    .status-completed { background: #dcfce7; color: #166534; }
+    
+    .pending-reason-box {
+      margin-top: 10px;
+      padding: 10px;
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+    
+    .work-plan-item {
+      background: white;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+    }
+    
+    .plan-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    
+    .tech-name {
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+    
+    .plan-details {
+      font-size: 0.9rem;
+      color: var(--text-main);
+    }
+    
+    .plan-footer {
+      margin-top: 10px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <div class="container dashboard">
+    <div class="header-section">
+      <h1>Progres Pekerjaan</h1>
+      <button class="btn-back" onclick="location.href='/spv'">← Kembali</button>
+    </div>
+
+    <div id="rencanaList" class="task-list">
+      <p style="text-align: center; color: var(--text-muted);">Memuat rencana kerja...</p>
+    </div>
+  </div>
+
+  <!-- Reassign Modal -->
+  <div id="reassignModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Reassign Teknisi</h2>
+        <span class="close" onclick="closeModal('reassign')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <p id="reassignTaskInfo" style="margin-bottom: 15px; font-size: 0.9rem; color: var(--text-muted);"></p>
+        <div id="reassignTeknisiList" class="tekniji-list"></div>
+        <div class="modal-actions" style="margin-top: 20px; text-align: right;">
+          <button onclick="closeModal('reassign')" class="btn-secondary">Batal</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    /* Modal styles if not in style.css */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+    .close {
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .tekniji-item {
+      padding: 12px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="/spv" class="nav-item" id="home-nav">
+      <div class="nav-icon">🏠</div>
+      <div class="nav-label">Home</div>
+    </a>
+    <a href="/spv/notifikasi" class="nav-item" id="notif-nav">
+      <div class="nav-icon">🔔</div>
+      <div class="nav-label">Notifikasi</div>
+    </a>
+    <a href="/spv/profile" class="nav-item" id="profile-nav">
+      <div class="nav-icon">👤</div>
+      <div class="nav-label">Profile</div>
+    </a>
+  </nav>
+
+  <script>
+    let currentAssignmentId = null;
+
+    function loadRencanaKerja() {
+      fetch('/api/rencana-kerja')
+        .then(response => response.json())
+        .then(data => {
+          const container = document.getElementById('rencanaList');
+          if (data.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 20px;">Belum ada tugas yang diberikan.</p>';
+            return;
+          }
+
+          let html = '';
+          data.forEach(item => {
+            const date = new Date(item.created_at).toLocaleString('id-ID', {
+              day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
+            });
+            html += `
+              <div class="work-plan-item">
+                <div class="plan-header">
+                  <div>
+                    <span class="tech-name">${item.teknisi_name}</span>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">Penerima Tugas</div>
+                  </div>
+                  <span class="status-badge status-${item.status}">${item.status}</span>
+                </div>
+                <div class="plan-details">
+                  <strong>Unit:</strong> ${item.unit} (${item.alias})<br>
+                  <strong>Lokasi:</strong> ${item.lantai}
+                </div>
+                ${item.status === 'pending' ? `
+                  <div class="pending-reason-box">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                      <strong>Alasan Pending:</strong>
+                      <span style="font-size: 0.75rem; color: #92400e;">
+                        ${item.pending_at ? new Date(item.pending_at).toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''}
+                      </span>
+                    </div>
+                    ${item.pending_reason || 'Tidak ada catatan.'}
+                  </div>
+                ` : ''}
+                <div class="plan-footer">
+                  <div>
+                    <span>Ditugaskan oleh: ${item.spv_name}</span><br>
+                    <span>${date}</span>
+                  </div>
+                  ${item.status !== 'completed' ? `
+                    <button onclick="openReassignModal(${item.id}, '${item.unit}', '${item.teknisi_name}')" class="btn-small btn-secondary" style="padding: 4px 8px; font-size: 0.7rem;">Ganti Teknisi</button>
+                  ` : ''}
+                </div>
+              </div>
+            `;
+          });
+          container.innerHTML = html;
+        })
+        .catch(err => {
+          console.error('Error:', err);
+          document.getElementById('rencanaList').innerHTML = '<p style="text-align: center; color: var(--danger-color);">Gagal memuat data.</p>';
+        });
+    }
+
+    function openReassignModal(id, unit, currentTech) {
+      currentAssignmentId = id;
+      document.getElementById('reassignTaskInfo').textContent = `Unit: ${unit} (Teknisi saat ini: ${currentTech})`;
+      document.getElementById('reassignModal').style.display = 'block';
+      loadReassignTeknisiList();
+    }
+
+    function closeModal(type) {
+      document.getElementById(type + 'Modal').style.display = 'none';
+    }
+
+    function loadReassignTeknisiList() {
+      fetch('/api/teknisi')
+        .then(response => response.json())
+        .then(data => {
+          const list = document.getElementById('reassignTeknisiList');
+          let html = '';
+          data.forEach(tech => {
+            html += `
+              <div class="tekniji-item">
+                <span>${tech.user}</span>
+                <button onclick="submitReassign(${tech.id}, '${tech.user}')" class="btn-small btn-primary">Pilih</button>
+              </div>
+            `;
+          });
+          list.innerHTML = html;
+        });
+    }
+
+    function submitReassign(techId, techName) {
+      if (!confirm(`Ganti teknisi ke ${techName}?`)) return;
+
+      fetch('/api/reassign-task', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          assignment_id: currentAssignmentId,
+          teknisi_id: techId
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert('Berhasil mengganti teknisi');
+          closeModal('reassign');
+          loadRencanaKerja();
+        } else {
+          alert('Gagal: ' + data.error);
+        }
+      });
+    }
+
+    // Load data on page load
+    loadRencanaKerja();
+  </script>
+</body>
+</html>
