@@ -4,82 +4,49 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Notifikasi - SPV</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
-  <style>
-    .notif-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 20px;
-    }
-    .notif-item {
-      background: white;
-      padding: 16px;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-      box-shadow: var(--shadow);
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-    }
-    .notif-icon {
-      font-size: 1.5rem;
-      background: #f0f9ff;
-      padding: 8px;
-      border-radius: 10px;
-    }
-    .notif-content {
-      flex: 1;
-    }
-    .notif-title {
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 4px;
-    }
-    .notif-time {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-    .empty-state {
-      text-align: center;
-      padding: 40px 20px;
-      color: var(--text-muted);
-    }
-  </style>
 </head>
 <body>
   <div class="container dashboard">
     <div class="header-section">
-      <h1>Notifikasi</h1>
-      <button class="btn-back" onclick="location.href='/spv'">← Kembali</button>
+      <div>
+        <h1 class="brand-title"><i class="fas fa-bell text-primary"></i> Notifikasi</h1>
+        <p class="welcome-msg">Informasi terbaru untuk Anda</p>
+      </div>
+      <button class="notification-badge" onclick="location.href='/spv'">
+        <i class="fas fa-arrow-left"></i>
+      </button>
     </div>
 
     <div class="notif-list">
       <div class="empty-state">
-        <div style="font-size: 3rem; margin-bottom: 10px;">🔔</div>
+        <div class="empty-icon-wrapper">
+          <i class="fas fa-bell-slash"></i>
+        </div>
         <p>Belum ada notifikasi baru.</p>
       </div>
     </div>
   </div>
 
   <!-- Bottom Navigation -->
-  <nav class="bottom-nav">
+  <nav class="bottom-nav modern">
     <a href="/spv" class="nav-item" id="home-nav">
-      <div class="nav-icon">🏠</div>
+      <div class="nav-icon"><i class="fas fa-home"></i></div>
       <div class="nav-label">Home</div>
     </a>
     <a href="/spv/notifikasi" class="nav-item active" id="notif-nav">
-      <div class="nav-icon">🔔</div>
+      <div class="nav-icon"><i class="fas fa-bell"></i></div>
       <div class="nav-label">Notifikasi</div>
     </a>
     <a href="/spv/profile" class="nav-item" id="profile-nav">
-      <div class="nav-icon">👤</div>
+      <div class="nav-icon"><i class="fas fa-user-circle"></i></div>
       <div class="nav-label">Profile</div>
     </a>
   </nav>
 
   <script>
-    // Set active nav item based on current page
     const currentPage = window.location.pathname;
     document.querySelectorAll('.nav-item').forEach(item => {
       item.classList.remove('active');

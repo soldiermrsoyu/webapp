@@ -4,37 +4,51 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pasukan Keong - Teknisi</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <div class="container dashboard">
+  <div class="container">
     <div class="header-section">
-      <h1>Pasukan Keong - Teknisi</h1>
-      <p>Halo, <%= user.user %></p>
+      <div>
+        <h1 class="brand-title"><i class="fas fa-shell"></i> Pasukan Keong</h1>
+        <p class="welcome-msg">Halo, <strong><%= user.user %></strong> (Teknisi)</p>
+      </div>
+      <div class="header-actions">
+        <div class="notification-badge">
+          <i class="fas fa-bell"></i>
+          <span class="dot"></span>
+        </div>
+      </div>
     </div>
 
     <div class="menu-grid">
-      <div class="menu-card" onclick="location.href='/teknisi/task'">
-        <div class="menu-icon">📋</div>
-        <div class="menu-title">Task</div>
-        <div class="menu-desc">Daftar Tugas & Laporan</div>
+      <div class="menu-card modern" onclick="location.href='/teknisi/task'">
+        <div class="menu-icon-wrapper blue">
+          <i class="fas fa-clipboard-list"></i>
+        </div>
+        <div class="menu-info">
+          <div class="menu-title">Task</div>
+          <div class="menu-desc">Daftar Tugas & Laporan</div>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Bottom Navigation -->
-  <nav class="bottom-nav">
+  <nav class="bottom-nav modern">
     <a href="/teknisi" class="nav-item active" id="home-nav">
-      <div class="nav-icon">🏠</div>
+      <div class="nav-icon"><i class="fas fa-home"></i></div>
       <div class="nav-label">Home</div>
     </a>
     <a href="/teknisi/notifikasi" class="nav-item" id="notif-nav">
-      <div class="nav-icon">🔔</div>
-      <div class="nav-label">Notifikasi</div>
+      <div class="nav-icon"><i class="fas fa-bell"></i></div>
+      <div class="nav-label">Notif</div>
     </a>
     <a href="/teknisi/profile" class="nav-item" id="profile-nav">
-      <div class="nav-icon">👤</div>
-      <div class="nav-label">Profile</div>
+      <div class="nav-icon"><i class="fas fa-user-circle"></i></div>
+      <div class="nav-label">Profil</div>
     </a>
   </nav>
 

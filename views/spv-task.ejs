@@ -3,41 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Task Menu - SPV</title>
+  <title>Jadwal Hari ini - SPV</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
   <div class="container dashboard">
     <div class="header-section">
-      <h1>Daftar Jadwal Maintenance</h1>
-      <button class="btn-back" onclick="location.href='/spv'">← Kembali</button>
+      <div>
+        <h1 class="brand-title"><i class="fas fa-calendar-alt text-primary"></i> Jadwal Maintenance</h1>
+        <p class="welcome-msg">Kelola penugasan unit hari ini</p>
+      </div>
+      <button class="notification-badge" onclick="location.href='/spv'">
+        <i class="fas fa-arrow-left"></i>
+      </button>
     </div>
     
     <div class="menu-grid">
-      <div class="menu-card" onclick="showModal('fcu')">
-        <div class="menu-icon">❄️</div>
-        <div class="menu-title">FCU</div>
-        <div class="menu-desc">Fan Coil Unit</div>
+      <div class="menu-card modern" onclick="showModal('fcu')">
+        <div class="menu-icon-wrapper blue">
+          <i class="fas fa-snowflake"></i>
+        </div>
+        <div class="menu-info">
+          <div class="menu-title">FCU</div>
+          <div class="menu-desc">Fan Coil Unit</div>
+        </div>
       </div>
-      <div class="menu-card" onclick="showModal('pump')">
-        <div class="menu-icon">💧</div>
-        <div class="menu-title">PUMP</div>
-        <div class="menu-desc">Water Pump System</div>
+      <div class="menu-card modern" onclick="showModal('pump')">
+        <div class="menu-icon-wrapper blue">
+          <i class="fas fa-tint"></i>
+        </div>
+        <div class="menu-info">
+          <div class="menu-title">PUMP</div>
+          <div class="menu-desc">Water Pump System</div>
+        </div>
       </div>
-      <div class="menu-card" onclick="showModal('genset')">
-        <div class="menu-icon">⚡</div>
-        <div class="menu-title">GENSET</div>
-        <div class="menu-desc">Generator Set</div>
+      <div class="menu-card modern" onclick="showModal('genset')">
+        <div class="menu-icon-wrapper orange">
+          <i class="fas fa-bolt"></i>
+        </div>
+        <div class="menu-info">
+          <div class="menu-title">GENSET</div>
+          <div class="menu-desc">Generator Set</div>
+        </div>
       </div>
-      <div class="menu-card" onclick="showModal('electric')">
-        <div class="menu-icon">🔌</div>
-        <div class="menu-title">ELECTRIC</div>
-        <div class="menu-desc">Electrical Panel</div>
+      <div class="menu-card modern" onclick="showModal('electric')">
+        <div class="menu-icon-wrapper purple">
+          <i class="fas fa-plug"></i>
+        </div>
+        <div class="menu-info">
+          <div class="menu-title">ELECTRIC</div>
+          <div class="menu-desc">Electrical Panel</div>
+        </div>
       </div>
-      <div class="menu-card" onclick="showModal('mcfa')">
-        <div class="menu-icon">⚙️</div>
-        <div class="menu-title">MCFA</div>
-        <div class="menu-desc">Fire Alarm System</div>
+      <div class="menu-card modern" onclick="showModal('mcfa')">
+        <div class="menu-icon-wrapper red">
+          <i class="fas fa-cog"></i>
+        </div>
+        <div class="menu-info">
+          <div class="menu-title">MCFA</div>
+          <div class="menu-desc">Fire Alarm System</div>
+        </div>
       </div>
     </div>
   </div>
@@ -46,7 +73,7 @@
   <div id="fcuModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>FCU - Daftar Unit</h2>
+        <h2><i class="fas fa-list"></i> Daftar Unit FCU</h2>
         <span class="close" onclick="closeModal('fcu')">&times;</span>
       </div>
       <div class="modal-body">
@@ -59,38 +86,39 @@
   <div id="fcuDetailModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>Detail FCU</h2>
+        <h2><i class="fas fa-info-circle"></i> Detail FCU</h2>
         <span class="close" onclick="closeModal('fcuDetail')">&times;</span>
       </div>
       <div class="modal-body">
-        <div id="fcuDetailContent">
-          <table class="detail-table">
+        <div id="fcuDetailContent" class="glass-card" style="padding: 20px; border-radius: 20px; margin-bottom: 24px;">
+          <table class="detail-table" style="width: 100%; border-collapse: separate; border-spacing: 0 10px;">
             <tr>
-              <td><strong>ID</strong></td>
-              <td id="detail-id"></td>
+              <td style="color: var(--text-secondary); font-weight: 600;">ID Unit</td>
+              <td id="detail-id" style="text-align: right; font-weight: 700; color: var(--primary);"></td>
             </tr>
             <tr>
-              <td><strong>Lantai</strong></td>
-              <td id="detail-lantai"></td>
+              <td style="color: var(--text-secondary); font-weight: 600;">Lantai</td>
+              <td id="detail-lantai" style="text-align: right; font-weight: 700;"></td>
             </tr>
             <tr>
-              <td><strong>Unit</strong></td>
-              <td id="detail-unit"></td>
+              <td style="color: var(--text-secondary); font-weight: 600;">Nama Unit</td>
+              <td id="detail-unit" style="text-align: right; font-weight: 700;"></td>
             </tr>
             <tr>
-              <td><strong>Alias</strong></td>
-              <td id="detail-alias"></td>
+              <td style="color: var(--text-secondary); font-weight: 600;">Alias</td>
+              <td id="detail-alias" style="text-align: right; font-weight: 700;"></td>
             </tr>
             <tr>
-              <td><strong>Tanggal</strong></td>
-              <td id="detail-tanggal"></td>
+              <td style="color: var(--text-secondary); font-weight: 600;">Tanggal</td>
+              <td id="detail-tanggal" style="text-align: right; font-weight: 700;"></td>
             </tr>
           </table>
         </div>
-        <div class="modal-actions" style="margin-top: 20px;">
-          <button onclick="showHistoryModal()" class="btn-secondary" style="background: #64748b;">Lihat Riwayat</button>
-          <button onclick="showTeknijiModal()" class="btn-primary">Pilih Teknisi</button>
-          <button onclick="closeModal('fcuDetail')" class="btn-secondary">Kembali</button>
+        <div class="modal-actions" style="display: flex; flex-direction: column; gap: 12px;">
+          <button id="assignBtn" onclick="showTeknijiModal()" class="btn btn-primary"><i class="fas fa-user-plus"></i> Pilih Teknisi</button>
+          <button id="reassignBtn" onclick="showTeknijiModal(true)" class="btn btn-warning" style="display: none; background: #f59e0b; color: white;"><i class="fas fa-user-gear"></i> Reassign Teknisi</button>
+          <button onclick="showHistoryModal()" class="btn btn-secondary"><i class="fas fa-history"></i> Lihat Riwayat</button>
+          <button onclick="closeModal('fcuDetail')" class="btn btn-secondary" style="background: var(--bg-main); border: none;">Kembali</button>
         </div>
       </div>
     </div>
@@ -177,23 +205,24 @@
   </div>
 
   <!-- Bottom Navigation -->
-  <nav class="bottom-nav">
+  <nav class="bottom-nav modern">
     <a href="/spv" class="nav-item" id="home-nav">
-      <div class="nav-icon">🏠</div>
+      <div class="nav-icon"><i class="fas fa-home"></i></div>
       <div class="nav-label">Home</div>
     </a>
     <a href="/spv/notifikasi" class="nav-item" id="notif-nav">
-      <div class="nav-icon">🔔</div>
+      <div class="nav-icon"><i class="fas fa-bell"></i></div>
       <div class="nav-label">Notifikasi</div>
     </a>
     <a href="/spv/profile" class="nav-item" id="profile-nav">
-      <div class="nav-icon">👤</div>
+      <div class="nav-icon"><i class="fas fa-user-circle"></i></div>
       <div class="nav-label">Profile</div>
     </a>
   </nav>
 
   <script>
     let selectedFCU = null;
+    let isReassignMode = false;
 
     function showModal(type) {
       const modalId = type + 'Modal';
@@ -215,42 +244,60 @@
         .then(data => {
           const fcuList = document.getElementById('fcuList');
           if (data.length === 0) {
-            fcuList.innerHTML = '<p>Tidak ada jadwal FCU untuk hari ini</p>';
+            fcuList.innerHTML = `
+              <div class="empty-state">
+                <div class="empty-icon-wrapper">
+                  <i class="fas fa-calendar-check"></i>
+                </div>
+                <p>Tidak ada jadwal FCU untuk hari ini</p>
+              </div>
+            `;
             return;
           }
           
-          let html = '<div class="fcu-items">';
+          let html = '<div class="fcu-items" style="display: flex; flex-direction: column; gap: 12px;">';
           data.forEach((item, index) => {
             const date = new Date(item.tanggal).toLocaleDateString('id-ID', {
               day: 'numeric', month: 'short', year: 'numeric'
             });
-            html += `<div class="fcu-item" data-index="${index}" data-id="${item.id}" data-lantai="${item.lantai}" data-unit="${item.unit}" data-alias="${item.alias}" data-tanggal="${date}">
-              <div class="fcu-id">${item.unit}</div>
-              <div class="fcu-info">
-                <span>${item.lantai}</span>
-                <small>${item.alias}</small>
+
+            let statusBadge = '';
+            let techInfo = '';
+            const status = item.assignment_status;
+            
+            if (!status) {
+              statusBadge = `<span style="padding: 4px 8px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; background: rgba(100, 116, 139, 0.1); color: #64748b; text-transform: uppercase;">Not Assign</span>`;
+            } else if (status === 'pending') {
+              statusBadge = `<span style="padding: 4px 8px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; background: rgba(245, 158, 11, 0.1); color: #d97706; text-transform: uppercase;">Pending</span>`;
+              techInfo = `<div style="font-size: 0.75rem; color: #d97706; font-weight: 600; margin-top: 4px;"><i class="fas fa-user-gear"></i> ${item.teknisi_names}</div>`;
+            } else if (status === 'assigned' || status === 'in_progress') {
+              statusBadge = `<span style="padding: 4px 8px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; background: rgba(var(--primary-rgb), 0.1); color: var(--primary); text-transform: uppercase;">On Progress</span>`;
+              techInfo = `<div style="font-size: 0.75rem; color: var(--primary); font-weight: 600; margin-top: 4px;"><i class="fas fa-user-gear"></i> ${item.teknisi_names}</div>`;
+            }
+
+            html += `
+              <div class="glass-card" style="padding: 16px; display: flex; justify-content: space-between; align-items: center; border-radius: 16px;">
+                <div style="display: flex; gap: 12px; align-items: center;">
+                  <div style="width: 40px; height: 40px; background: var(--primary-soft); color: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem;">
+                    ${item.unit}
+                  </div>
+                  <div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <div style="font-weight: 700; color: var(--text-main); font-size: 0.95rem;">${item.alias}</div>
+                      ${statusBadge}
+                    </div>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary);"><i class="fas fa-map-marker-alt"></i> ${item.lantai}</div>
+                    ${techInfo}
+                  </div>
+                </div>
+                <button onclick="showFCUDetail(${item.id}, '${item.lantai}', '${item.unit}', '${item.alias}', '${date}', '${status}', '${item.assignment_ids || ''}')" class="btn btn-primary" style="width: 44px; height: 44px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 12px; background: rgba(var(--primary-rgb), 0.1); color: var(--primary); border: none; font-size: 1.1rem; transition: all 0.2s;">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
               </div>
-              <div class="fcu-buttons">
-                <button class="btn-small fcu-detail-btn">Detail</button>
-              </div>
-            </div>`;
+            `;
           });
           html += '</div>';
           fcuList.innerHTML = html;
-          
-          // Add event listeners to all detail buttons
-          document.querySelectorAll('.fcu-detail-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-              const item = this.closest('.fcu-item');
-              showFCUDetail(
-                item.dataset.id,
-                item.dataset.lantai,
-                item.dataset.unit,
-                item.dataset.alias,
-                item.dataset.tanggal
-              );
-            });
-          });
         })
         .catch(error => {
           console.error('Error:', error);
@@ -258,22 +305,50 @@
         });
     }
 
-    function showFCUDetail(id, lantai, unit, alias, tanggal) {
-      console.log('Setting selectedFCU:', { id, lantai, unit, alias, tanggal });
-      // Ensure id is an integer
+    function showFCUDetail(id, lantai, unit, alias, tanggal, status, assignmentIds) {
+      console.log('Raw showFCUDetail params:', { id, lantai, unit, alias, tanggal, status, assignmentIds });
       id = parseInt(id);
-      selectedFCU = { id, lantai, unit, alias, tanggal };
+      
+      // Bersihkan assignmentIds jika berupa string kosong atau 'null'
+      let processedAssignmentIds = [];
+      if (assignmentIds && assignmentIds !== 'null' && assignmentIds !== '') {
+        processedAssignmentIds = assignmentIds.split(',').filter(id => id.trim() !== '').map(id => parseInt(id));
+      }
+
+      selectedFCU = { 
+        id, 
+        lantai, 
+        unit, 
+        alias, 
+        tanggal, 
+        status: (status === 'null' || !status || status === 'undefined') ? null : status, 
+        assignmentIds: processedAssignmentIds
+      };
+      console.log('Processed selectedFCU:', selectedFCU);
       document.getElementById('detail-id').textContent = id;
       document.getElementById('detail-lantai').textContent = lantai;
       document.getElementById('detail-unit').textContent = unit;
       document.getElementById('detail-alias').textContent = alias;
       document.getElementById('detail-tanggal').textContent = tanggal;
       
+      // Show/hide buttons based on status
+      const assignBtn = document.getElementById('assignBtn');
+      const reassignBtn = document.getElementById('reassignBtn');
+      
+      if (!selectedFCU.status) {
+        assignBtn.style.display = 'block';
+        reassignBtn.style.display = 'none';
+      } else {
+        assignBtn.style.display = 'none';
+        reassignBtn.style.display = 'block';
+      }
+      
       closeModal('fcu');
       showModal('fcuDetail');
     }
 
-    function showTeknijiModal() {
+    function showTeknijiModal(reassign = false) {
+      isReassignMode = reassign;
       loadTeknijiList();
       closeModal('fcuDetail');
       showModal('tekniji');
@@ -291,7 +366,14 @@
         .then(res => res.json())
         .then(data => {
           if (data.length === 0) {
-            historyContent.innerHTML = '<p style="text-align: center; padding: 20px;">Belum ada riwayat untuk unit ini.</p>';
+            historyContent.innerHTML = `
+              <div class="empty-state" style="padding: 20px;">
+                <div class="empty-icon-wrapper" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                  <i class="fas fa-history"></i>
+                </div>
+                <p>Belum ada riwayat untuk unit ini.</p>
+              </div>
+            `;
             return;
           }
           
@@ -301,15 +383,25 @@
               day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
             });
             html += `
-              <div class="history-item" style="border-bottom: 1px solid #eee; padding: 15px 0;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                  <strong style="color: var(--primary-color);">${date}</strong>
-                  <span style="font-size: 0.8rem; color: #666;">Oleh: ${item.teknisi_name}</span>
+              <div class="glass-card" style="padding: 16px; margin-bottom: 12px; border-radius: 16px; background: var(--bg-main);">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--glass-border);">
+                  <strong style="color: var(--primary); font-size: 0.85rem;"><i class="fas fa-calendar-day"></i> ${date}</strong>
+                  <span style="font-size: 0.75rem; color: var(--text-secondary);"><i class="fas fa-user-gear"></i> ${item.teknisi_name}</span>
                 </div>
-                <div style="font-size: 0.9rem;">
-                  <p><strong>Temuan:</strong> ${item.findings}</p>
-                  <p><strong>Tindakan:</strong> ${item.actions_taken}</p>
-                  ${item.next_maintenance_date ? `<p style="color: #059669;"><strong>Jadwal Berikutnya:</strong> ${new Date(item.next_maintenance_date).toLocaleDateString('id-ID')}</p>` : ''}
+                <div style="font-size: 0.85rem; display: flex; flex-direction: column; gap: 8px;">
+                  <div>
+                    <label style="display: block; font-size: 0.7rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 2px;">Temuan</label>
+                    <div style="color: var(--text-main);">${item.findings}</div>
+                  </div>
+                  <div>
+                    <label style="display: block; font-size: 0.7rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 2px;">Tindakan</label>
+                    <div style="color: var(--text-main);">${item.actions_taken}</div>
+                  </div>
+                  ${item.next_maintenance_date ? `
+                    <div style="margin-top: 4px; padding: 8px; background: var(--success-soft); color: var(--success); border-radius: 8px; font-weight: 700; font-size: 0.75rem;">
+                      <i class="fas fa-calendar-plus"></i> Jadwal Berikutnya: ${new Date(item.next_maintenance_date).toLocaleDateString('id-ID')}
+                    </div>
+                  ` : ''}
                 </div>
               </div>
             `;
@@ -332,12 +424,19 @@
             return;
           }
           
-          let html = '<div class="tekniji-items">';
+          let html = '<div class="tekniji-items" style="display: flex; flex-direction: column; gap: 12px;">';
           data.forEach(item => {
-            html += `<div class="tekniji-item" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-              <input type="checkbox" name="teknisi" value="${item.id}" id="tech-${item.id}" style="width: 20px; height: 20px;">
-              <label for="tech-${item.id}" class="tekniji-name">${item.user}</label>
-            </div>`;
+            html += `
+              <label class="glass-card" style="padding: 16px; display: flex; align-items: center; gap: 12px; border-radius: 16px; cursor: pointer; background: var(--bg-main);">
+                <input type="checkbox" name="teknisi" value="${item.id}" style="width: 20px; height: 20px; accent-color: var(--primary);">
+                <div style="display: flex; gap: 12px; align-items: center;">
+                  <div style="width: 32px; height: 32px; background: var(--primary-soft); color: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-user"></i>
+                  </div>
+                  <span style="font-weight: 700; color: var(--text-main);">${item.user}</span>
+                </div>
+              </label>
+            `;
           });
           html += '</div>';
           teknijiList.innerHTML = html;
@@ -362,14 +461,27 @@
         return;
       }
 
-      const payload = {
+      if (isReassignMode && (!selectedFCU.assignmentIds || selectedFCU.assignmentIds.length === 0)) {
+        alert('Tidak ada penugasan aktif untuk di-reassign pada unit ini');
+        return;
+      }
+
+      const endpoint = isReassignMode ? '/api/reassign-task' : '/api/assign-task';
+      console.log('isReassignMode:', isReassignMode);
+      console.log('selectedFCU:', selectedFCU);
+      
+      const payload = isReassignMode ? {
+        fcu_id: parseInt(selectedFCU.id),
+        old_assignment_ids: selectedFCU.assignmentIds,
+        new_teknisi_ids: selectedTechs
+      } : {
         fcu_id: parseInt(selectedFCU.id),
         teknisi_ids: selectedTechs
       };
+      
+      console.log('Final Payload:', payload);
 
-      console.log('Sending payload:', payload);
-
-      fetch('/api/assign-task', {
+      fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -387,7 +499,8 @@
       })
       .then(data => {
         if (data.success) {
-          alert(`Task berhasil dikirim ke ${selectedTechs.length} teknisi`);
+          const actionText = isReassignMode ? 'di-reassign' : 'dikirim';
+          alert(`Task berhasil ${actionText} ke ${selectedTechs.length} teknisi`);
           closeModal('tekniji');
           selectedFCU = null;
           loadFCUList();
@@ -402,7 +515,7 @@
     }
 
     window.onclick = function(event) {
-      ['fcuModal', 'fcuDetailModal', 'teknijiModal', 'pumpModal', 'gensetModal', 'electricModal', 'mcfaModal'].forEach(modalId => {
+      ['fcuModal', 'fcuDetailModal', 'teknijiModal', 'pumpModal', 'gensetModal', 'electricModal', 'mcfaModal', 'historyModal'].forEach(modalId => {
         const modal = document.getElementById(modalId);
         if (event.target === modal) {
           modal.style.display = 'none';

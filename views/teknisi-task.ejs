@@ -4,60 +4,67 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Task Menu - Teknisi</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <div class="dashboard">
-    <h1>Task Menu</h1>
-    <p>Tugas maintenance yang diberikan</p>
+  <div class="container dashboard">
+    <div class="header-section">
+      <div>
+        <h1 class="brand-title"><i class="fas fa-clipboard-list text-primary"></i> Daftar Tugas</h1>
+        <p class="welcome-msg">Tugas maintenance yang diberikan</p>
+      </div>
+      <button class="notification-badge" onclick="location.href='/teknisi'">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+    </div>
     
     <div id="taskList" class="task-list"></div>
   </div>
 
   <!-- Report Modal -->
   <div id="reportModal" class="modal">
-    <div class="modal-content" style="max-width: 600px; max-height: 90vh; overflow-y: auto;">
-      <div class="modal-header">
-        <h2>Laporan Maintenance</h2>
+    <div class="modal-content glass-card" style="max-width: 600px; max-height: 90vh; overflow-y: auto; border-radius: 32px 32px 0 0; border: none; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(20px);">
+      <div class="modal-header" style="padding: 24px; border-bottom: 1px solid rgba(0,0,0,0.05);">
+        <h2 style="font-weight: 800; color: var(--text-main);"><i class="fas fa-file-signature text-primary"></i> Laporan Maintenance</h2>
         <span class="close" onclick="closeReportModal()">&times;</span>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" style="padding: 24px;">
         <div id="stepContainer"></div>
         
         <div id="finalForm" style="display: none;">
-          <div class="step-header">Langkah Terakhir: Ringkasan</div>
-          <div class="form-group" style="margin-bottom: 15px;">
-            <label>Temuan / Kondisi:</label>
-            <textarea id="findings" class="form-control" rows="3" placeholder="Jelaskan temuan di lapangan..."></textarea>
+          <div class="step-header" style="font-weight: 800; font-size: 1.2rem; margin-bottom: 24px; color: var(--primary);">Langkah Terakhir: Ringkasan</div>
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-main);"><i class="fas fa-search"></i> Temuan / Kondisi:</label>
+            <textarea id="findings" class="form-control" rows="3" placeholder="Jelaskan temuan di lapangan..." style="background: #f8fafc; border: 1px solid #e2e8f0;"></textarea>
           </div>
-          <div class="form-group" style="margin-bottom: 15px;">
-            <label>Tindakan yang Diambil:</label>
-            <textarea id="actionsTaken" class="form-control" rows="3" placeholder="Jelaskan perbaikan yang dilakukan..."></textarea>
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-main);"><i class="fas fa-tools"></i> Tindakan yang Diambil:</label>
+            <textarea id="actionsTaken" class="form-control" rows="3" placeholder="Jelaskan perbaikan yang dilakukan..." style="background: #f8fafc; border: 1px solid #e2e8f0;"></textarea>
           </div>
-          <div class="form-group" style="margin-bottom: 15px;">
-            <label>Rencana Maintenance Berikutnya:</label>
-            <input type="date" id="nextDate" class="form-control">
+          <div class="form-group">
+            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-main);"><i class="fas fa-calendar-alt"></i> Rencana Maintenance Berikutnya:</label>
+            <input type="date" id="nextDate" class="form-control" style="background: #f8fafc; border: 1px solid #e2e8f0;">
           </div>
         </div>
-
-        <div class="modal-actions" style="margin-top: 20px; display: flex; justify-content: space-between;">
-          <button id="prevBtn" onclick="prevStep()" class="btn-secondary" style="display: none;">Sebelumnya</button>
-          <div style="flex: 1;"></div>
-          <button id="nextBtn" onclick="nextStep()" class="btn-primary">Selanjutnya</button>
-          <button id="submitBtn" onclick="submitReport()" class="btn-primary" style="display: none;">Kirim Laporan</button>
-        </div>
+      </div>
+      <div class="modal-footer" style="padding: 24px; border-top: 1px solid rgba(0,0,0,0.05); display: flex; gap: 12px; background: white;">
+        <button id="prevBtn" class="btn btn-secondary" onclick="prevStep()" style="display: none; flex: 1; padding: 14px; border-radius: 16px; font-weight: 700;"><i class="fas fa-chevron-left"></i> Kembali</button>
+        <button id="nextBtn" class="btn btn-primary" onclick="nextStep()" style="flex: 2; padding: 14px; border-radius: 16px; font-weight: 700;">Lanjut <i class="fas fa-chevron-right"></i></button>
+        <button id="submitBtn" class="btn btn-success" onclick="submitReport()" style="display: none; flex: 2; padding: 14px; border-radius: 16px; font-weight: 700; background: var(--success); color: white;">Kirim Laporan <i class="fas fa-paper-plane"></i></button>
       </div>
     </div>
   </div>
 
   <!-- History Modal -->
   <div id="historyModal" class="modal">
-    <div class="modal-content" style="max-width: 600px; max-height: 80vh; overflow-y: auto;">
-      <div class="modal-header">
-        <h2>Riwayat Maintenance</h2>
+    <div class="modal-content glass-card" style="max-width: 600px; max-height: 80vh; overflow-y: auto; border-radius: 32px; border: none;">
+      <div class="modal-header" style="padding: 24px; border-bottom: 1px solid rgba(0,0,0,0.05);">
+        <h2 style="font-weight: 800; color: var(--text-main);"><i class="fas fa-history text-primary"></i> Riwayat Maintenance</h2>
         <span class="close" onclick="closeHistoryModal()">&times;</span>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" style="padding: 24px;">
         <div id="historyContent" class="history-list">
           <!-- History items will be injected here -->
         </div>
@@ -67,18 +74,18 @@
 
   <!-- Pending Reason Modal -->
   <div id="pendingModal" class="modal">
-    <div class="modal-content" style="max-width: 500px;">
-      <div class="modal-header">
-        <h2>Alasan Pending</h2>
+    <div class="modal-content glass-card" style="max-width: 500px; border-radius: 32px; border: none;">
+      <div class="modal-header" style="padding: 24px; border-bottom: 1px solid rgba(0,0,0,0.05);">
+        <h2 style="font-weight: 800; color: var(--text-main);"><i class="fas fa-pause-circle text-warning"></i> Alasan Pending</h2>
         <span class="close" onclick="closePendingModal()">&times;</span>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" style="padding: 24px;">
         <div class="form-group">
-          <label>Kenapa tugas ini di-pending?</label>
-          <textarea id="pendingReason" class="form-control" rows="4" placeholder="Contoh: Sparepart belum tersedia, butuh alat tambahan, dll..."></textarea>
+          <label style="display: block; font-weight: 600; margin-bottom: 12px; color: var(--text-main);">Kenapa tugas ini di-pending?</label>
+          <textarea id="pendingReason" class="form-control" rows="4" placeholder="Contoh: Sparepart belum tersedia, butuh alat tambahan, dll..." style="background: #f8fafc; border: 1px solid #e2e8f0;"></textarea>
         </div>
-        <div class="modal-actions" style="margin-top: 20px;">
-          <button onclick="submitPending()" class="btn-primary" style="width: 100%;">Simpan Alasan & Pending</button>
+        <div class="modal-actions" style="margin-top: 24px;">
+          <button onclick="submitPending()" class="btn-primary" style="width: 100%; padding: 16px; border-radius: 16px; font-weight: 700;">Simpan Alasan & Pending</button>
         </div>
       </div>
     </div>
@@ -192,17 +199,17 @@
   </style>
 
   <!-- Bottom Navigation -->
-  <nav class="bottom-nav">
+  <nav class="bottom-nav modern">
     <a href="/teknisi" class="nav-item" id="home-nav">
-      <div class="nav-icon">🏠</div>
+      <div class="nav-icon"><i class="fas fa-home"></i></div>
       <div class="nav-label">Home</div>
     </a>
     <a href="/teknisi/notifikasi" class="nav-item" id="notif-nav">
-      <div class="nav-icon">🔔</div>
+      <div class="nav-icon"><i class="fas fa-bell"></i></div>
       <div class="nav-label">Notifikasi</div>
     </a>
     <a href="/teknisi/profile" class="nav-item" id="profile-nav">
-      <div class="nav-icon">👤</div>
+      <div class="nav-icon"><i class="fas fa-user-circle"></i></div>
       <div class="nav-label">Profile</div>
     </a>
   </nav>
@@ -245,6 +252,32 @@
 
     let checklistData = [];
 
+    // Local Storage persistence logic
+    function saveLocalProgress() {
+      if (!selectedAssignmentId) return;
+      const dataToSave = {
+        currentStep,
+        checklistData,
+        findings: document.getElementById('findings').value,
+        actionsTaken: document.getElementById('actionsTaken').value,
+        nextDate: document.getElementById('nextDate').value,
+        timestamp: new Date().getTime()
+      };
+      localStorage.setItem(`task_progress_${selectedAssignmentId}`, JSON.stringify(dataToSave));
+    }
+
+    function loadLocalProgress(assignmentId) {
+      const saved = localStorage.getItem(`task_progress_${assignmentId}`);
+      if (saved) {
+        return JSON.parse(saved);
+      }
+      return null;
+    }
+
+    function clearLocalProgress(assignmentId) {
+      localStorage.removeItem(`task_progress_${assignmentId}`);
+    }
+
     function initChecklist() {
       const container = document.getElementById('stepContainer');
       if (checklistData.length === 0) {
@@ -252,8 +285,8 @@
       }
       
       let html = `
-        <div class="progress-bar">
-          <div id="progressFill" class="progress-fill"></div>
+        <div class="progress-bar" style="height: 10px; background: #f1f5f9; border-radius: 20px; margin-bottom: 32px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);">
+          <div id="progressFill" class="progress-fill" style="height: 100%; background: linear-gradient(90deg, var(--primary), #4cc9f0); width: 0%; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);"></div>
         </div>
       `;
       
@@ -261,41 +294,44 @@
         const data = checklistData[index];
         html += `
           <div class="step-item" id="step-${index}">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-              <div class="step-header" style="margin-bottom: 0;">Langkah ${index + 1} dari ${checklistItems.length}</div>
-              <button onclick="showFormPendingModal()" class="btn-small" style="background: var(--warning-color); color: white; padding: 4px 10px; font-size: 0.75rem;">Pending Pekerjaan</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+              <div class="step-header" style="margin-bottom: 0; font-weight: 800; color: var(--primary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Langkah ${index + 1} / ${checklistItems.length}</div>
+              <button onclick="showFormPendingModal()" class="btn-small" style="background: #fff3cd; color: #856404; padding: 6px 12px; font-size: 0.75rem; border-radius: 10px; font-weight: 700; border: none;"><i class="fas fa-pause"></i> Pending</button>
             </div>
-            <p style="margin-bottom: 15px; font-weight: 500;">${item.text}</p>
+            <p style="margin-bottom: 24px; font-weight: 700; font-size: 1.1rem; color: var(--text-main); line-height: 1.5;">${item.text}</p>
             
-            <div class="input-section" style="margin-bottom: 20px;">
+            <div class="input-section" style="margin-bottom: 24px;">
               ${item.type === 'radio' ? `
-                <div class="checklist-option" onclick="selectRadio(${index}, 'ok')">
-                  <input type="radio" name="check-${index}" id="check-${index}-ok" value="ok" ${data.value === 'ok' ? 'checked' : ''}>
-                  <label for="check-${index}-ok">Selesai / OK</label>
+                <div class="checklist-option glass-card" onclick="selectRadio(${index}, 'ok')" style="padding: 16px; border-radius: 16px; border: 2px solid ${data.value === 'ok' ? 'var(--primary)' : 'rgba(0,0,0,0.05)'}; background: ${data.value === 'ok' ? 'rgba(var(--primary-rgb), 0.05)' : 'white'}; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.2s; position: relative; z-index: 10;">
+                  <div class="radio-custom" style="width: 24px; height: 24px; border-radius: 50%; border: 2px solid ${data.value === 'ok' ? 'var(--primary)' : '#cbd5e1'}; display: flex; align-items: center; justify-content: center; background: white; pointer-events: none;">
+                    ${data.value === 'ok' ? '<div style="width: 12px; height: 12px; border-radius: 50%; background: var(--primary); pointer-events: none;"></div>' : ''}
+                  </div>
+                  <input type="radio" name="check-${index}" id="check-${index}-ok" value="ok" ${data.value === 'ok' ? 'checked' : ''} style="display: none; pointer-events: none;">
+                  <label for="check-${index}-ok" style="font-weight: 700; color: ${data.value === 'ok' ? 'var(--primary)' : 'var(--text-main)'}; cursor: pointer; margin-bottom: 0; pointer-events: none;">Selesai / OK</label>
                 </div>
               ` : `
                 <div class="form-group">
-                  <input type="text" id="input-${index}" class="form-control" placeholder="${item.placeholder || 'Masukkan hasil pemeriksaan'}" oninput="updateInputValue(${index}, this.value)" value="${data.value || ''}">
+                  <input type="text" id="input-${index}" class="form-control" placeholder="${item.placeholder || 'Masukkan hasil pemeriksaan'}" oninput="updateInputValue(${index}, this.value)" value="${data.value || ''}" style="padding: 16px; border-radius: 16px; background: #f8fafc; border: 1px solid #e2e8f0; font-weight: 600;">
                 </div>
               `}
             </div>
 
-            <div class="note-section" style="margin-bottom: 20px;">
-              <label style="display: block; font-size: 0.85rem; margin-bottom: 5px; color: #666;">Catatan Tambahan:</label>
-              <textarea id="note-${index}" class="form-control" placeholder="Tambahkan catatan jika diperlukan..." rows="2" oninput="updateNoteValue(${index}, this.value)">${data.note || ''}</textarea>
+            <div class="note-section" style="margin-bottom: 24px;">
+              <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 8px; color: var(--text-muted); text-transform: uppercase;">Catatan Tambahan:</label>
+              <textarea id="note-${index}" class="form-control" placeholder="Tambahkan catatan jika diperlukan..." rows="2" oninput="updateNoteValue(${index}, this.value)" style="padding: 16px; border-radius: 16px; background: #f8fafc; border: 1px solid #e2e8f0; font-weight: 500;">${data.note || ''}</textarea>
             </div>
 
             ${item.photo ? `
-              <div class="photo-section" style="margin-bottom: 20px;">
-                <label style="display: block; font-size: 0.85rem; margin-bottom: 5px; color: #666;">Foto Bukti (Maks 3):</label>
-                <div id="photo-grid-${index}" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px;">
+              <div class="photo-section" style="margin-bottom: 24px;">
+                <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 12px; color: var(--text-muted); text-transform: uppercase;">Foto Bukti (Maks 3):</label>
+                <div id="photo-grid-${index}" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px;">
                   ${renderPhotos(index)}
                 </div>
                 ${data.photos.length < 3 ? `
-                  <div id="photo-container-${index}" class="photo-container" style="padding: 15px;">
-                    <div class="photo-placeholder" onclick="triggerCamera(${index})">
-                      <span class="icon" style="font-size: 1.5rem;">📷</span>
-                      <span style="font-size: 0.8rem;">Tambah Foto</span>
+                  <div id="photo-container-${index}" class="photo-container glass-card" onclick="triggerCamera(${index})" style="padding: 24px; border: 2px dashed #cbd5e1; border-radius: 20px; background: #f8fafc; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s;">
+                    <div class="photo-placeholder" style="display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--primary);">
+                      <i class="fas fa-camera" style="font-size: 1.5rem;"></i>
+                      <span style="font-size: 0.85rem; font-weight: 700;">Tambah Foto</span>
                     </div>
                   </div>
                 ` : ''}
@@ -320,6 +356,7 @@
 
     function removePhoto(index, photoIndex) {
       checklistData[index].photos.splice(photoIndex, 1);
+      saveLocalProgress();
       initChecklist(); // Re-render this step
       document.getElementById(`step-${currentStep}`).classList.add('active');
     }
@@ -328,14 +365,42 @@
       document.getElementById(`check-${index}-${value}`).checked = true;
       checklistData[index].value = value;
       updateProgress();
+      saveLocalProgress();
+      
+      // Update UI for the radio options to show selection immediately
+      const currentStepEl = document.getElementById(`step-${index}`);
+      const options = currentStepEl.querySelectorAll('.checklist-option');
+      options.forEach(opt => {
+        const isSelected = opt.querySelector('input').value === value;
+        opt.style.border = `2px solid ${isSelected ? 'var(--primary)' : 'rgba(0,0,0,0.05)'}`;
+        opt.style.background = isSelected ? 'rgba(var(--primary-rgb), 0.05)' : 'white';
+        
+        const radioCustom = opt.querySelector('.radio-custom');
+        radioCustom.style.border = `2px solid ${isSelected ? 'var(--primary)' : '#cbd5e1'}`;
+        radioCustom.innerHTML = isSelected ? '<div style="width: 12px; height: 12px; border-radius: 50%; background: var(--primary);"></div>' : '';
+        
+        const label = opt.querySelector('label');
+        label.style.color = isSelected ? 'var(--primary)' : 'var(--text-main)';
+      });
+    }
+
+    function updateProgress() {
+      const filledCount = checklistData.filter(d => d.value).length;
+      const progress = (filledCount / checklistItems.length) * 100;
+      const progressFill = document.getElementById('progressFill');
+      if (progressFill) {
+        progressFill.style.width = `${progress}%`;
+      }
     }
 
     function updateInputValue(index, value) {
       checklistData[index].value = value;
+      saveLocalProgress();
     }
 
     function updateNoteValue(index, value) {
       checklistData[index].note = value;
+      saveLocalProgress();
     }
 
     function triggerCamera(index) {
@@ -349,6 +414,7 @@
           const imageData = e.target.result;
           if (checklistData[index].photos.length < 3) {
             checklistData[index].photos.push(imageData);
+            saveLocalProgress();
             initChecklist(); // Re-render
             document.getElementById(`step-${currentStep}`).classList.add('active');
           }
@@ -412,6 +478,7 @@
       document.getElementById(`step-${currentStep}`).classList.remove('active');
       
       currentStep++;
+      saveLocalProgress();
 
       if (currentStep < checklistItems.length) {
         document.getElementById(`step-${currentStep}`).classList.add('active');
@@ -437,6 +504,7 @@
       }
 
       currentStep--;
+      saveLocalProgress();
 
       if (currentStep < checklistItems.length) {
         document.getElementById(`step-${currentStep}`).classList.add('active');
@@ -448,55 +516,77 @@
     function viewReport(assignmentId) {
       selectedAssignmentId = assignmentId;
       currentStep = 0;
-      checklistData = []; // Reset
-
-      // Reset form fields
-      document.getElementById('findings').value = '';
-      document.getElementById('actionsTaken').value = '';
-      document.getElementById('nextDate').value = '';
-
-      // Try to load temporary progress
+      checklistData = [];
+      
+      // Load progress from Local Storage FIRST
+      const localData = loadLocalProgress(assignmentId);
+      
+      // THEN check for progress from database
       fetch(`/api/temp-progress/${assignmentId}`)
         .then(res => res.json())
-        .then(data => {
-          if (data.found) {
-            const temp = data.data;
-            currentStep = temp.current_step || 0;
-            checklistData = temp.checklist_data || [];
-            document.getElementById('findings').value = temp.findings || '';
-            document.getElementById('actionsTaken').value = temp.actions_taken || '';
-            if (temp.next_maintenance_date) {
-              document.getElementById('nextDate').value = new Date(temp.next_maintenance_date).toISOString().split('T')[0];
-            }
+        .then(dbResult => {
+          let progressToUse = null;
+          
+          if (dbResult.found) {
+            const dbData = dbResult.data;
+            progressToUse = {
+              currentStep: dbData.current_step,
+              checklistData: dbData.checklist_data || [],
+              findings: dbData.findings || '',
+              actionsTaken: dbData.actions_taken || '',
+              nextDate: dbData.next_maintenance_date ? new Date(dbData.next_maintenance_date).toISOString().split('T')[0] : ''
+            };
+            console.log('Using progress from database:', progressToUse);
+          } else if (localData) {
+            progressToUse = localData;
+            console.log('Using progress from local storage:', progressToUse);
           }
           
-          initChecklist();
-          
-          // Hide all steps first
-          document.querySelectorAll('.step-item').forEach(el => el.classList.remove('active'));
-          
-          if (currentStep < checklistItems.length) {
-            document.getElementById(`step-${currentStep}`).classList.add('active');
-            document.getElementById('finalForm').style.display = 'none';
-            document.getElementById('nextBtn').style.display = 'block';
-            document.getElementById('submitBtn').style.display = 'none';
-          } else {
-            document.getElementById('finalForm').style.display = 'block';
-            document.getElementById('nextBtn').style.display = 'none';
-            document.getElementById('submitBtn').style.display = 'block';
+          if (progressToUse) {
+            currentStep = progressToUse.currentStep || 0;
+            checklistData = progressToUse.checklistData || [];
+            
+            // Set values to form fields
+            setTimeout(() => {
+              if (document.getElementById('findings')) document.getElementById('findings').value = progressToUse.findings || '';
+              if (document.getElementById('actionsTaken')) document.getElementById('actionsTaken').value = progressToUse.actionsTaken || '';
+              if (document.getElementById('nextDate')) document.getElementById('nextDate').value = progressToUse.nextDate || '';
+            }, 100);
           }
           
-          document.getElementById('prevBtn').style.display = currentStep > 0 ? 'block' : 'none';
-          document.getElementById('reportModal').style.display = 'block';
-          updateProgress();
+          initAndShowModal();
         })
         .catch(err => {
-          console.error('Error loading temp progress:', err);
-          initChecklist();
-          document.getElementById('step-0').classList.add('active');
-          document.getElementById('reportModal').style.display = 'block';
-          updateProgress();
+          console.error('Error fetching progress:', err);
+          // Fallback to local only
+          if (localData) {
+            currentStep = localData.currentStep;
+            checklistData = localData.checklistData;
+          }
+          initAndShowModal();
         });
+    }
+
+    function initAndShowModal() {
+      initChecklist();
+      
+      // Hide all steps first
+      document.querySelectorAll('.step-item').forEach(el => el.classList.remove('active'));
+      
+      if (currentStep < checklistItems.length) {
+        document.getElementById(`step-${currentStep}`).classList.add('active');
+        document.getElementById('finalForm').style.display = 'none';
+        document.getElementById('nextBtn').style.display = 'block';
+        document.getElementById('submitBtn').style.display = 'none';
+      } else {
+        document.getElementById('finalForm').style.display = 'block';
+        document.getElementById('nextBtn').style.display = 'none';
+        document.getElementById('submitBtn').style.display = 'block';
+      }
+      
+      document.getElementById('prevBtn').style.display = currentStep > 0 ? 'block' : 'none';
+      document.getElementById('reportModal').style.display = 'block';
+      updateProgress();
     }
 
     let isFormPending = false;
@@ -537,6 +627,7 @@
       .then(data => {
         if (data.success) {
           alert('Tugas berhasil di-pending' + (isFormPending ? ' dan progress disimpan' : ''));
+          clearLocalProgress(selectedAssignmentId);
           closePendingModal();
           if (isFormPending) closeReportModal();
           loadTasks();
@@ -595,6 +686,7 @@
       .then(data => {
         if (data.success) {
           alert('Laporan berhasil dikirim');
+          clearLocalProgress(selectedAssignmentId);
           closeReportModal();
           loadTasks();
         } else {
@@ -632,34 +724,45 @@
         .then(data => {
           const taskList = document.getElementById('taskList');
           if (data.length === 0) {
-            taskList.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 20px;">Tidak ada tugas untuk Anda saat ini.</p>';
+            taskList.innerHTML = `
+              <div class="empty-state">
+                <div class="empty-icon-wrapper">
+                  <i class="fas fa-tasks"></i>
+                </div>
+                <p>Tidak ada tugas hari ini</p>
+              </div>
+            `;
             return;
           }
-
+          
           let html = '';
           data.forEach(task => {
+            const isPending = task.status === 'pending';
             html += `
-              <div class="task-card">
-                <div class="task-header">
-                  <div class="task-unit">${task.unit}</div>
-                  <div class="status-badge status-${task.status}">${task.status}</div>
+              <div class="glass-card modern task-item" onclick="viewReport(${task.id})" style="padding: 20px; border-radius: 24px; margin-bottom: 16px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255, 255, 255, 0.1); position: relative; overflow: hidden;">
+                ${isPending ? `<div style="position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: #f59e0b;"></div>` : ''}
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                  <div style="background: rgba(var(--primary-rgb), 0.1); color: var(--primary); padding: 6px 14px; border-radius: 12px; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                    ${task.unit}
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: 8px; text-transform: uppercase; ${isPending ? 'background: #fef3c7; color: #d97706;' : 'background: #e0f2fe; color: #0284c7;'}">
+                      ${task.status}
+                    </span>
+                    <button class="btn-icon" onclick="event.stopPropagation(); showHistoryModalForTeknisi(${task.fcu_id})">
+                      <i class="fas fa-history"></i>
+                    </button>
+                  </div>
                 </div>
-                <div class="task-body">
-                  <p><strong>Lantai:</strong> ${task.lantai}</p>
-                  <p><strong>Alias:</strong> ${task.alias}</p>
+                <div style="margin-bottom: 12px;">
+                  <div style="font-weight: 800; font-size: 1.2rem; color: var(--text-main); margin-bottom: 4px;">${task.alias || task.unit}</div>
+                  <div style="color: var(--text-secondary); font-size: 0.9rem; font-weight: 500;"><i class="fas fa-map-marker-alt" style="margin-right: 4px;"></i> Lantai ${task.lantai}</div>
                 </div>
-                <div class="task-actions">
-                  ${(task.status === 'assigned' || task.status === 'pending') ? `
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                      <div style="display: flex; gap: 10px;">
-                        <button onclick="viewReport(${task.id})" class="btn-primary" style="flex: 1;">${task.status === 'pending' ? 'Lanjutkan' : 'Kerjakan'}</button>
-                        <button onclick="showPendingModal(${task.id})" class="btn-secondary" style="background: var(--warning-color); color: white; flex: 1;">Pending</button>
-                      </div>
-                      <button onclick="showHistoryModalForTeknisi(${task.fcu_id})" class="btn-secondary" style="background: #64748b; width: 100%;">Riwayat</button>
-                    </div>
-                  ` : `
-                    <button onclick="viewReportResult(${task.id})" class="btn-secondary">Lihat Laporan</button>
-                  `}
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.05);">
+                  <div style="display: flex; align-items: center; gap: 8px; color: var(--primary); font-weight: 700; font-size: 0.9rem;">
+                    Buka Laporan <i class="fas fa-arrow-right"></i>
+                  </div>
+                  ${isPending ? `<div style="font-size: 0.75rem; color: #d97706; font-weight: 600;"><i class="fas fa-clock"></i> Melanjutkan...</div>` : ''}
                 </div>
               </div>
             `;
@@ -742,6 +845,33 @@
       if (event.target === historyModal) {
         closeHistoryModal();
       }
+    }
+    window.onclick = function(event) {
+      ['reportModal', 'historyModal', 'pendingModal'].forEach(modalId => {
+        const modal = document.getElementById(modalId);
+        if (event.target === modal) {
+          if (modalId === 'reportModal') closeReportModal();
+          else if (modalId === 'historyModal') closeHistoryModal();
+          else if (modalId === 'pendingModal') closePendingModal();
+        }
+      });
+    }
+
+    function closeHistoryModal() {
+      document.getElementById('historyModal').style.display = 'none';
+    }
+
+    function showHistoryModalForTeknisi(fcuId) {
+      const historyContent = document.getElementById('historyContent');
+      historyContent.innerHTML = `
+        <div class="empty-state" style="padding: 40px 20px; text-align: center;">
+          <div class="empty-icon-wrapper" style="width: 80px; height: 80px; background: rgba(var(--primary-rgb), 0.1); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 2rem;">
+            <i class="fas fa-history"></i>
+          </div>
+          <p style="color: var(--text-muted); font-weight: 600;">Belum ada riwayat maintenance untuk unit ini.</p>
+        </div>
+      `;
+      document.getElementById('historyModal').style.display = 'block';
     }
   </script>
 </body>

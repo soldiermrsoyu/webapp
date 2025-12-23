@@ -4,35 +4,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - Pasukan Keong</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body class="login-page">
   <div class="login-container">
     <div class="login-card">
       <div class="login-header">
-        <h1>🐚 Pasukan Keong</h1>
+        <h1><i class="fas fa-shell"></i> Pasukan Keong</h1>
         <p>Maintenance System</p>
       </div>
       <form method="POST" action="/login" class="login-form">
         <div class="form-group">
-          <label for="user">Username</label>
+          <label for="user"><i class="fas fa-user"></i> Username</label>
           <input type="text" id="user" name="user" placeholder="Enter username" required>
         </div>
         <div class="form-group">
-          <label for="password">Password</label>
+          <label for="password"><i class="fas fa-lock"></i> Password</label>
           <input type="password" id="password" name="password" placeholder="Enter password" required>
         </div>
-        <button type="submit" class="login-btn">Login</button>
-        <div class="credentials-info" style="margin-top: 20px; text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px; font-size: 0.9em;">
-          <p style="margin-bottom: 10px; color: #666;"><strong>Demo Credentials:</strong></p>
-          <div style="display: flex; justify-content: center; gap: 20px;">
-            <div style="cursor: pointer; padding: 5px 10px; background: #e9ecef; border-radius: 4px;" onclick="fillCreds('spv', 'spv123')">
-              <strong>SPV</strong><br>
-              <small>Pass: spv123</small>
+        <button type="submit" class="login-btn">Sign In <i class="fas fa-arrow-right"></i></button>
+        
+        <div class="credentials-info" style="margin-top: 32px; padding: 20px; background: var(--bg-main); border-radius: 16px; border: 1px solid var(--border);">
+          <p style="margin-bottom: 12px; font-weight: 700; color: var(--text-primary); font-size: 0.85rem;">Demo Credentials:</p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div style="cursor: pointer; padding: 10px; background: white; border-radius: 12px; border: 1px solid var(--border); transition: all 0.2s;" onclick="fillCreds('spv', 'spv123')">
+              <strong style="font-size: 0.8rem; color: var(--primary);">SPV</strong><br>
+              <small style="color: var(--text-secondary);">spv123</small>
             </div>
-            <div style="cursor: pointer; padding: 5px 10px; background: #e9ecef; border-radius: 4px;" onclick="fillCreds('teknisi1', 'tek123')">
-              <strong>Teknisi</strong><br>
-              <small>Pass: tek123</small>
+            <div style="cursor: pointer; padding: 10px; background: white; border-radius: 12px; border: 1px solid var(--border); transition: all 0.2s;" onclick="fillCreds('teknisi1', 'tek123')">
+              <strong style="font-size: 0.8rem; color: var(--primary);">Teknisi</strong><br>
+              <small style="color: var(--text-secondary);">tek123</small>
             </div>
           </div>
         </div>

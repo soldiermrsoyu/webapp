@@ -4,65 +4,80 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pasukan Keong - Profile</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <div class="dashboard">
-    <h1>Pasukan Keong - Profile</h1>
+  <div class="container dashboard">
+    <div class="header-section">
+      <div>
+        <h1 class="brand-title"><i class="fas fa-user-circle text-primary"></i> Profil Saya</h1>
+        <p class="welcome-msg">Kelola akun dan keamanan</p>
+      </div>
+      <button class="notification-badge" onclick="location.href='/spv'">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+    </div>
     
     <div class="profile-container">
-      <div class="profile-header">
-        <div class="profile-picture">👤</div>
-        <div class="profile-info">
-          <h2><%= user.user %></h2>
-          <p>Supervisor (SPV)</p>
+      <div class="glass-card" style="padding: 32px; border-radius: 24px; text-align: center; margin-bottom: 24px;">
+        <div class="profile-avatar" style="width: 100px; height: 100px; background: var(--primary-soft); color: var(--primary); border-radius: 30px; display: flex; align-items: center; justify-content: center; font-size: 3rem; margin: 0 auto 16px;">
+          <i class="fas fa-user-tie"></i>
         </div>
+        <h2 style="margin-bottom: 4px;"><%= user.user %></h2>
+        <p style="font-weight: 600; color: var(--primary); background: var(--primary-soft); display: inline-block; padding: 4px 12px; border-radius: 10px; font-size: 0.8rem;">Supervisor (SPV)</p>
       </div>
 
-      <div class="profile-section">
-        <h3>Informasi Akun</h3>
-        <div class="profile-field">
+      <div class="profile-section" style="margin-bottom: 32px;">
+        <h3 style="margin-bottom: 16px; font-size: 1.1rem;"><i class="fas fa-id-card"></i> Informasi Akun</h3>
+        <div class="form-group">
           <label>Username</label>
-          <input type="text" value="<%= user.user %>" disabled>
+          <input type="text" value="<%= user.user %>" disabled style="background: white; border-color: var(--border);">
         </div>
       </div>
 
-      <div class="profile-section">
-        <h3>Keamanan</h3>
-        <div class="profile-field">
+      <div class="profile-section" style="margin-bottom: 32px;">
+        <h3 style="margin-bottom: 16px; font-size: 1.1rem;"><i class="fas fa-shield-alt"></i> Keamanan</h3>
+        <div class="form-group" id="passwordDisplay">
           <label>Password</label>
-          <input type="password" placeholder="••••••••" id="passwordInput" disabled value="••••••••">
-          <button onclick="togglePasswordChange()" class="btn-secondary" id="passwordBtn">Ubah Password</button>
+          <div style="display: flex; gap: 10px;">
+            <input type="password" placeholder="••••••••" id="passwordInput" disabled value="••••••••" style="flex: 1; background: white;">
+            <button onclick="togglePasswordChange()" class="btn btn-secondary" id="passwordBtn" style="width: auto; min-height: auto; padding: 0 20px;">Ubah</button>
+          </div>
         </div>
-        <div id="passwordChangeForm" style="display: none;">
-          <div class="profile-field">
+        
+        <div id="passwordChangeForm" style="display: none; animation: slideUp 0.3s ease;">
+          <div class="form-group">
             <label>Password Baru</label>
             <input type="password" id="newPassword" placeholder="Masukkan password baru">
           </div>
-          <button onclick="updatePassword()" class="btn-primary">Simpan Password</button>
-          <button onclick="cancelPasswordChange()" class="btn-secondary">Batal</button>
+          <div style="display: flex; gap: 10px;">
+            <button onclick="updatePassword()" class="btn btn-primary" style="flex: 2;">Simpan Password</button>
+            <button onclick="cancelPasswordChange()" class="btn btn-secondary" style="flex: 1;">Batal</button>
+          </div>
         </div>
       </div>
 
-      <div class="profile-actions">
-        <a href="/logout" class="btn-logout">Logout</a>
+      <div class="profile-actions" style="margin-top: 40px;">
+        <a href="/logout" onclick="localStorage.clear()" class="btn btn-danger" style="background: linear-gradient(135deg, var(--danger), #c1121f); box-shadow: 0 4px 14px 0 rgba(247, 37, 133, 0.39); text-decoration: none;"><i class="fas fa-sign-out-alt"></i> Keluar dari Aplikasi</a>
       </div>
     </div>
   </div>
 
   <!-- Bottom Navigation -->
-  <nav class="bottom-nav">
+  <nav class="bottom-nav modern">
     <a href="/spv" class="nav-item" id="home-nav">
-      <div class="nav-icon">🏠</div>
+      <div class="nav-icon"><i class="fas fa-home"></i></div>
       <div class="nav-label">Home</div>
     </a>
     <a href="/spv/notifikasi" class="nav-item" id="notif-nav">
-      <div class="nav-icon">🔔</div>
-      <div class="nav-label">Notifikasi</div>
+      <div class="nav-icon"><i class="fas fa-bell"></i></div>
+      <div class="nav-label">Notif</div>
     </a>
     <a href="/spv/profile" class="nav-item active" id="profile-nav">
-      <div class="nav-icon">👤</div>
-      <div class="nav-label">Profile</div>
+      <div class="nav-icon"><i class="fas fa-user-circle"></i></div>
+      <div class="nav-label">Profil</div>
     </a>
   </nav>
 
